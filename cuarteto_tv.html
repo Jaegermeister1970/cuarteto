@@ -151,7 +151,7 @@ body::before{content:'';position:fixed;inset:0;
 
 <!-- Lobby Screen -->
 <div class="screen" id="scr-lobby">
-  <div class="lobby-box">
+  <div class="lobby-box" style="max-width:680px">
     <div class="lb-flag">🇨🇴</div>
     <div class="lb-title">Cuarteto <span>Criminal</span></div>
     <div class="lb-sub">Jeder Spieler öffnet die Handy-App und gibt diesen Code ein</div>
@@ -162,6 +162,29 @@ body::before{content:'';position:fixed;inset:0;
     <div class="lb-players" id="lb-players">
       <div style="font-size:13px;color:var(--text3)">Warte auf Spieler…</div>
     </div>
+
+    <!-- MODUS-AUSWAHL -->
+    <div style="width:100%;margin-top:4px">
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;text-align:center">Spielmodus wählen</div>
+      <div style="display:flex;gap:12px;width:100%">
+        <div class="mode-card active" id="mode-classic" onclick="selectMode('classic')" style="flex:1;background:var(--bg3);border:2px solid var(--red);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s">
+          <div style="font-size:22px;margin-bottom:6px">🃏</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--red)">Klassisch</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5">Karten sammeln &amp; Quartette ablegen. Wer die meisten Quartette hat gewinnt.</div>
+        </div>
+        <div class="mode-card" id="mode-duell" onclick="selectMode('duell')" style="flex:1;background:var(--bg3);border:2px solid var(--bg4);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s">
+          <div style="font-size:22px;margin-bottom:6px">⚔️</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text2)">Kategorie-Duell</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5">Beim Anfragen eine Kategorie wählen. Höherer Wert gewinnt die Karte!</div>
+        </div>
+        <div class="mode-card" id="mode-trump" onclick="selectMode('trump')" style="flex:1;background:var(--bg3);border:2px solid var(--bg4);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s">
+          <div style="font-size:22px;margin-bottom:6px">👑</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text2)">Supertrumpf</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5">Karte offen spielen &amp; Kategorie wählen. Höchster Wert gewinnt alle Karten!</div>
+        </div>
+      </div>
+    </div>
+
     <div class="lb-start-hint" id="lb-start-hint">Mindestens 2 Spieler nötig zum Starten</div>
   </div>
 </div>
@@ -291,8 +314,20 @@ const CARDS=[
 
 /* STATE */
 let peer=null, conns={};
-let GS={players:[],deck:[],cur:0,started:false};
+let GS={players:[],deck:[],cur:0,started:false,mode:'classic'};
 let roomCode='', lastAsk=null;
+const SL_TV={p:"Poder",a:"Audacia",v:"Antecedentes",d:"Duración",r:"Resolución",s:"Daño"};
+const SC_TV={p:"#E24B4A",a:"#6B4C9A",v:"#8B6100",d:"#1A8C55",r:"#185FA5",s:"#C47A20"};
+
+function selectMode(m){
+  GS.mode=m;
+  ['classic','duell','trump'].forEach(id=>{
+    const el=document.getElementById('mode-'+id);
+    const isActive=id===m;
+    el.style.borderColor=isActive?'var(--red)':'var(--bg4)';
+    el.querySelector('div:nth-child(2)').style.color=isActive?'var(--red)':'var(--text2)';
+  });
+}
 
 const $=id=>document.getElementById(id);
 function shuf(a){for(let i=a.length-1;i>0;i--){const j=0|Math.random()*(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -346,6 +381,7 @@ function onMsg(pid,msg){
   }
   if(msg.t==='start'){
     if(GS.players.length<2){send(pid,{t:'err',m:'Mindestens 2 Spieler nötig'});return}
+    if(msg.mode)GS.mode=msg.mode;
     startGame();return;
   }
   if(msg.t==='ask'){
@@ -354,12 +390,70 @@ function onMsg(pid,msg){
     if(ai<0||ti<0||ai!==GS.cur)return;
     const fi=GS.players[ti].hand.findIndex(c=>c.f===msg.f&&c.n===msg.n);
     const an=GS.players[ai].name,tn=GS.players[ti].name;
-    lastAsk={asker:pid,target:msg.tid,f:msg.f,n:msg.n};
-    $('tb-action').textContent=an+' fragt '+tn+' nach '+msg.f+msg.n+'…';
-    // Highlight card on table
+    const cat=msg.cat||null;
+    const catLbl=cat?` [${SL_TV[cat]||cat}]`:'';
+    lastAsk={asker:pid,target:msg.tid,f:msg.f,n:msg.n,cat};
+    $('tb-action').textContent=an+' fragt '+tn+' nach '+msg.f+msg.n+catLbl+'…';
     renderTable();
     setTimeout(()=>{
       if(fi>=0){
+        const targetCard=GS.players[ti].hand[fi];
+        const askerCard=GS.players[ai].hand.find(c=>c.f===msg.f)||null;
+
+        // MODUS: Kategorie-Duell — Wert vergleichen
+        if(GS.mode==='duell'&&cat&&askerCard){
+          const askerVal=askerCard[cat]||0;
+          const targetVal=targetCard[cat]||0;
+          if(askerVal>=targetVal){
+            const card=GS.players[ti].hand.splice(fi,1)[0];
+            GS.players[ai].hand.push(card);
+            addLog('⚔️ '+an+' gewinnt! '+SL_TV[cat]+': '+askerVal+' > '+targetVal,'g');
+            notif('⚔️ '+an+' gewinnt das Duell! ('+askerVal+' vs '+targetVal+')');
+            chkQ(ai);
+            if(gameOver()){endGame();return}
+            lastAsk=null;
+            bcast();
+          }else{
+            addLog('⚔️ '+an+' verliert Duell! '+SL_TV[cat]+': '+askerVal+' < '+targetVal+'','b');
+            notif('⚔️ '+tn+' behält die Karte! ('+targetVal+' > '+askerVal+')');
+            lastAsk=null;
+            GS.cur=(GS.cur+1)%GS.players.length;
+            bcast();
+          }
+          return;
+        }
+
+        // MODUS: Supertrumpf
+        if(GS.mode==='trump'&&cat){
+          // Alle Spieler spielen ihre stärkste Karte der angefragten Familie
+          let winner=ai, winVal=askerCard?askerCard[cat]||0:0;
+          const played=[{pidx:ai,val:askerCard?askerCard[cat]||0:0,card:askerCard}];
+          GS.players.forEach((p,i)=>{
+            if(i===ai)return;
+            const best=p.hand.filter(c=>c.f===msg.f).sort((a,b)=>(b[cat]||0)-(a[cat]||0))[0];
+            if(best){
+              played.push({pidx:i,val:best[cat]||0,card:best});
+              if((best[cat]||0)>winVal){winVal=best[cat]||0;winner=i;}
+            }
+          });
+          // Gewinner bekommt alle gespielten Karten
+          const winCards=played.map(p=>{
+            const idx=GS.players[p.pidx].hand.indexOf(p.card);
+            if(idx>-1)return GS.players[p.pidx].hand.splice(idx,1)[0];
+          }).filter(Boolean);
+          winCards.forEach(c=>GS.players[winner].hand.push(c));
+          const wn=GS.players[winner].name;
+          addLog('👑 Supertrumpf '+SL_TV[cat]+'! '+wn+' gewinnt '+winCards.length+' Karten ('+winVal+')','q');
+          notif('👑 '+wn+' gewinnt '+winCards.length+' Karten!',4000);
+          chkQ(winner);
+          if(gameOver()){endGame();return}
+          GS.cur=winner; // Gewinner ist als nächstes dran
+          lastAsk=null;
+          bcast();
+          return;
+        }
+
+        // KLASSISCH
         const card=GS.players[ti].hand.splice(fi,1)[0];
         GS.players[ai].hand.push(card);
         addLog('✅ '+an+' → '+tn+': '+msg.f+msg.n+' ('+CARDS.find(c=>c.f===msg.f&&c.n===msg.n)?.nm+') erhalten!','g');
@@ -388,7 +482,8 @@ function startGame(){
   GS.players.forEach(p=>{p.hand=d.splice(0,pp);p.quartetts=[]});
   GS.deck=d;GS.cur=0;GS.started=true;
   for(let i=0;i<GS.players.length;i++)chkQ(i);
-  addLog('🃏 Spiel gestartet! '+GS.players[0].name+' beginnt.','s');
+  const modeNames={'classic':'Klassisch','duell':'Kategorie-Duell','trump':'Supertrumpf'};
+  addLog('🃏 Spiel gestartet! Modus: '+modeNames[GS.mode]+'. '+GS.players[0].name+' beginnt.','s');
   $('scr-lobby').classList.add('hide');
   bcast();renderBoard();
 }
@@ -449,7 +544,7 @@ function bcast(extra={}){
       t:'state',
       players:GS.players.map(q=>({id:q.id,name:q.name,hc:q.hand.length,q:q.quartetts})),
       hand:p.hand,deck:GS.deck.length,cur:GS.cur,
-      curId:GS.players[GS.cur]?.id,
+      curId:GS.players[GS.cur]?.id,mode:GS.mode,
       ...extra
     };
     if(conns[p.id])try{conns[p.id].send(msg)}catch(e){}
