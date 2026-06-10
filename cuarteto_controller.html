@@ -205,19 +205,11 @@ select{width:100%;padding:10px 28px 10px 11px;border-radius:10px;border:1px soli
       <div id="w-players"></div>
     </div>
     <div class="start-section" id="start-section" style="display:none">
-      <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Spielmodus</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
-        <div class="mode-opt active" id="mopt-classic" onclick="pickMode('classic')" style="background:var(--bg2);border:2px solid var(--red);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px">
-          <span style="font-size:22px">🃏</span>
-          <div><div style="font-size:14px;font-weight:700;color:var(--red)">Klassisch</div><div style="font-size:11px;color:var(--text3)">Karten sammeln &amp; Quartette ablegen</div></div>
-        </div>
-        <div class="mode-opt" id="mopt-duell" onclick="pickMode('duell')" style="background:var(--bg2);border:2px solid var(--bg3);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px">
-          <span style="font-size:22px">⚔️</span>
-          <div><div style="font-size:14px;font-weight:700;color:var(--text2)">Kategorie-Duell</div><div style="font-size:11px;color:var(--text3)">Kategorie wählen — höherer Wert gewinnt!</div></div>
-        </div>
-        <div class="mode-opt" id="mopt-trump" onclick="pickMode('trump')" style="background:var(--bg2);border:2px solid var(--bg3);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px">
-          <span style="font-size:22px">👑</span>
-          <div><div style="font-size:14px;font-weight:700;color:var(--text2)">Supertrumpf</div><div style="font-size:11px;color:var(--text3)">Karte offen — alle spielen dagegen!</div></div>
+      <div id="mode-display" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid #ffffff0D;border-radius:12px;padding:12px 14px;margin-bottom:4px">
+        <span id="mode-display-icon" style="font-size:22px">🃏</span>
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:2px">Spielmodus (auf TV gewählt)</div>
+          <div id="mode-display-name" style="font-size:14px;font-weight:700;color:var(--red)">Klassisch</div>
         </div>
       </div>
       <button class="btn btn-red" onclick="doStart()">Spiel starten</button>
@@ -347,6 +339,16 @@ const SL_C={p:"Poder",a:"Audacia",v:"Antecedentes",d:"Duración",r:"Resolución"
 const SC_C={p:"#E24B4A",a:"#6B4C9A",v:"#8B6100",d:"#1A8C55",r:"#185FA5",s:"#C47A20"};
 let selectedMode='classic';
 
+function updateModeDisplay(){
+  const icons={'classic':'🃏','duell':'⚔️','trump':'👑'};
+  const names={'classic':'Klassisch','duell':'Kategorie-Duell','trump':'Supertrumpf'};
+  const colors={'classic':'var(--red)','duell':'#E24B4A','trump':'#D4A843'};
+  const icon=document.getElementById('mode-display-icon');
+  const name=document.getElementById('mode-display-name');
+  if(icon)icon.textContent=icons[gameMode]||'🃏';
+  if(name){name.textContent=names[gameMode]||'Klassisch';name.style.color=colors[gameMode]||'var(--red)';}
+}
+
 function pickMode(m){
   selectedMode=m;
   ['classic','duell','trump'].forEach(id=>{
@@ -392,7 +394,8 @@ async function doJoin(){
 
 function onMsg(msg){
   if(msg.t==='err'){toast(msg.m,3500);return}
-  if(msg.t==='pl'){gPlayers=msg.pl;renderWait(msg.pl);return}
+  if(msg.t==='pl'){gPlayers=msg.pl;if(msg.mode){gameMode=msg.mode;updateModeDisplay();}renderWait(msg.pl);return}
+  if(msg.t==='mode'){gameMode=msg.mode;updateModeDisplay();return}
   if(msg.t==='state'){
     GS=msg;myHand=msg.hand||[];if(msg.mode)gameMode=msg.mode;
     if(cardIdx>=myHand.length)cardIdx=0;
@@ -405,7 +408,7 @@ function onMsg(msg){
 
 function send(m){try{if(tvConn&&tvConn.open)tvConn.send(m)}catch(e){}}
 
-function doStart(){send({t:'start',mode:selectedMode})}
+function doStart(){send({t:'start'})}
 
 function renderWait(pl){
   $('w-pcount').textContent=pl.length;
