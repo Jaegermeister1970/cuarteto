@@ -155,9 +155,17 @@ body::before{content:'';position:fixed;inset:0;
     <div class="lb-flag">🇨🇴</div>
     <div class="lb-title">Cuarteto <span>Criminal</span></div>
     <div class="lb-sub">Jeder Spieler öffnet die Handy-App und gibt diesen Code ein</div>
-    <div class="lb-code-wrap">
-      <div class="lb-code-lbl">Raum-Code</div>
-      <div class="lb-code" id="lb-code">———</div>
+    <div style="display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap">
+      <div class="lb-code-wrap">
+        <div class="lb-code-lbl">Raum-Code</div>
+        <div class="lb-code" id="lb-code">———</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="background:#fff;padding:10px;border-radius:12px">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACX0lEQVR4nO2ZQW7cMAxFn0IDs5SBHiBHkW/QI+VMuYF8lNyAXg5A43cheZpNJ4MW6FhAuLLFhT8l8vOLTuKe7S933fDt/zc/cgBTlZcAk8iK3I6lxLPxPeAvkoD9tZrqdV6BaVtMkp8C35f+lBZgYmVb2N4AU2VL00nw3bPpeCjmJMpF7NOyz34SfA/7132GXGGlHcR//v5f+idAMG1LTCl+cE2Y/1yBLLbn43vAv6aUoFy8XD6WixfAnD2lNJ8C333TYeYlcgXkJXJfPD1/NrTVvATFHCByJdcWwgD4VQPkRU5QyJIXebF2Is/G98j+k2V+2/ZqTm9eA/RfpGqqAebIS1uRF/MySv6YY6rkHkW0BymG2H/HnAbYpMgyVVMla4T8eYEC5SLt8xrbYs51hu2tt+AT4LtvcuygoKBINXJtclpD8I8UubbMaSG0KMiVPEL9drYsapXbq7iYM0L9vpB1ndc0s7/KHLbFvAnRk+D7wpp+iFyleltp6TRK/pBr2/NWC1I9OvIQ+EtAZEVWa8GSWjgj5P8EkN+njPlKVsrvU6yxIdhPgO8R/dCZ35FEVisEG0X/S71gj8qV96IYIX+QamQFBKU1sr7zY+ifpplL12wU668yZ4z7i2pAQBwsampEOkj+O5HV1A4tiuPyNUb+NDvGJjflrzH0z+/5s0m3m2ObRQyCv3wa/hSp6pCjNkb+d8LpF/msLoeatHg2vkf925Jm9hm2ZB9LUAL213oafH+0G/+Tq/XJ1aeO9mx8j+Z/o50sU5UTwDj8T7swSm2Q0ieKGkL/pO//p0/1/wLSGyzz+Qyh5AAAAABJRU5ErkJggg==" style="width:90px;height:90px;display:block" alt="QR Controller">
+        </div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Controller scannen</div>
+      </div>
     </div>
     <div class="lb-players" id="lb-players">
       <div style="font-size:13px;color:var(--text3)">Warte auf Spieler…</div>
@@ -327,6 +335,10 @@ function selectMode(m){
     el.style.borderColor=isActive?'var(--red)':'var(--bg4)';
     el.querySelector('div:nth-child(2)').style.color=isActive?'var(--red)':'var(--text2)';
   });
+  // Modus sofort an alle verbundenen Controller senden
+  broadcastMode();
+  // Lobby neu rendern damit Modus-Hinweis aktualisiert wird
+  renderLobby();
 }
 
 const $=id=>document.getElementById(id);
@@ -381,7 +393,7 @@ function onMsg(pid,msg){
   }
   if(msg.t==='start'){
     if(GS.players.length<2){send(pid,{t:'err',m:'Mindestens 2 Spieler nötig'});return}
-    if(msg.mode)GS.mode=msg.mode;
+    // Modus wird auf TV gewählt, nicht vom Controller überschrieben
     startGame();return;
   }
   if(msg.t==='ask'){
@@ -554,7 +566,14 @@ function bcast(extra={}){
 
 function bcastPlayers(){
   Object.values(conns).forEach(c=>{
-    try{c.send({t:'pl',pl:GS.players.map(p=>({id:p.id,name:p.name}))})}catch(e){}
+    try{c.send({t:'pl',pl:GS.players.map(p=>({id:p.id,name:p.name})),mode:GS.mode})}catch(e){}
+  });
+}
+
+// Modus an alle senden wenn er sich ändert
+function broadcastMode(){
+  Object.values(conns).forEach(c=>{
+    try{c.send({t:'mode',mode:GS.mode})}catch(e){}
   });
 }
 
@@ -569,9 +588,11 @@ function renderLobby(){
       <div class="lb-pc-dot" style="background:${PC[i%4]}"></div>
       <span class="lb-pc-name" style="color:${PC[i%4]}">${p.name}</span>
     </div>`).join('');
+  const modeLabels={'classic':'🃏 Klassisch','duell':'⚔️ Kategorie-Duell','trump':'👑 Supertrumpf'};
+  const modeHint=` · Modus: ${modeLabels[GS.mode]||'Klassisch'}`;
   $('lb-start-hint').textContent=GS.players.length<2
     ?'Mindestens 2 Spieler nötig zum Starten'
-    :`${GS.players.length} Spieler bereit — Host kann Spiel starten`;
+    :`${GS.players.length} Spieler bereit — Mitspieler können Spiel starten${modeHint}`;
 }
 
 /* ── RENDER BOARD ── */
