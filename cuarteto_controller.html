@@ -219,7 +219,10 @@ select{width:100%;padding:10px 28px 10px 11px;border-radius:10px;border:1px soli
   <div class="game-top">
     <div class="gt-row1">
       <span class="gt-title">CUARTETO CRIMINAL 🇨🇴</span>
-      <span class="gt-deck" id="g-deck-lbl">Stapel: 0</span>
+      <span style="display:flex;align-items:center;gap:6px">
+        <span id="g-conn-dot" style="width:7px;height:7px;border-radius:50%;background:#4DD;flex-shrink:0"></span>
+        <span class="gt-deck" id="g-deck-lbl">Stapel: 0</span>
+      </span>
     </div>
   </div>
   <div class="score-strip" id="g-scores"></div>
@@ -348,10 +351,13 @@ async function doJoin(){
       show('s-wait');
       $('w-code').textContent=code;
       renderWait([{id:myId,name:myName}]);
+      setConnStatus(true);
+      startHeartbeat();
+      requestWakeLock();
     });
     tvConn.on('data',onMsg);
     tvConn.on('error',e=>toast('Fehler: '+e));
-    tvConn.on('close',()=>toast('Verbindung zum TV verloren'));
+    tvConn.on('close',()=>{setConnStatus(false);autoReconnect();});
   }catch(e){toast('Fehler: '+e)}
 }
 
@@ -557,10 +563,115 @@ function showEnd(sc){
 }
 
 function goLobby(){
+  stopHeartbeat();
+  releaseWakeLock();
   if(peer)try{peer.destroy()}catch(e){}
   peer=null;tvConn=null;GS=null;myHand=[];cardIdx=0;gPlayers=[];
+  myName='';tvCode='';
   show('s-lobby');
 }
+
+/* ── HEARTBEAT ── */
+let _hbTimer=null;
+function startHeartbeat(){
+  stopHeartbeat();
+  _hbTimer=setInterval(()=>{
+    if(tvConn&&tvConn.open){
+      try{tvConn.send({t:'ping'})}catch(e){}
+    } else {
+      // Verbindung weg — Auto-Reconnect
+      setConnStatus(false);
+      autoReconnect();
+    }
+  },5000);
+}
+function stopHeartbeat(){
+  if(_hbTimer){clearInterval(_hbTimer);_hbTimer=null;}
+}
+
+/* ── AUTO-RECONNECT ── */
+let _rcTimer=null, _rcAttempts=0;
+function autoReconnect(){
+  if(_rcTimer||!tvCode||!myName)return;
+  setConnStatus(false);
+  toast('Verbindung getrennt — versuche neu…',4000);
+  _rcAttempts=0;
+  _tryReconnect();
+}
+function _tryReconnect(){
+  if(_rcAttempts>=10){
+    toast('Keine Verbindung — bitte Seite neu laden',5000);
+    return;
+  }
+  _rcAttempts++;
+  _rcTimer=setTimeout(async()=>{
+    _rcTimer=null;
+    try{
+      // Alte Verbindung schließen
+      if(tvConn)try{tvConn.close()}catch(e){}
+      if(peer&&!peer.destroyed)try{peer.destroy()}catch(e){}
+      // Neue Peer-Instanz
+      peer=new Peer('cqc-'+Math.random().toString(36).slice(2,10),{debug:0});
+      await new Promise((res,rej)=>{
+        peer.on('open',res);
+        peer.on('error',e=>rej(e));
+        setTimeout(()=>rej('timeout'),8000);
+      });
+      myId=peer.id;
+      tvConn=peer.connect('cqtv-'+tvCode);
+      tvConn.on('open',()=>{
+        tvConn.send({t:'rejoin',name:myName,id:myId});
+        setConnStatus(true);
+        toast('✅ Wieder verbunden!');
+        _rcAttempts=0;
+        startHeartbeat();
+      });
+      tvConn.on('data',onMsg);
+      tvConn.on('error',()=>_tryReconnect());
+      tvConn.on('close',()=>{setConnStatus(false);autoReconnect()});
+    }catch(e){
+      _tryReconnect(); // nächster Versuch
+    }
+  },2000+_rcAttempts*1000); // warte länger bei jedem Versuch
+}
+
+/* ── VERBINDUNGSANZEIGE ── */
+function setConnStatus(ok){
+  const dot=document.getElementById('w-dot');
+  const txt=document.getElementById('w-conn-txt');
+  const gdot=document.getElementById('g-conn-dot');
+  if(dot){dot.className='dot '+(ok?'ok':'err');dot.style.background=ok?'#4DD':'#F66';}
+  if(txt)txt.textContent=ok?'Verbunden':'Getrennt…';
+  if(gdot){gdot.style.background=ok?'#4DD':'#F66';}
+}
+
+/* ── WAKE LOCK ── */
+let _wakeLock=null;
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      _wakeLock=await navigator.wakeLock.request('screen');
+      _wakeLock.addEventListener('release',()=>{
+        // iOS gibt WakeLock frei wenn Tab in Hintergrund — neu anfordern wenn sichtbar
+        document.addEventListener('visibilitychange',async()=>{
+          if(document.visibilityState==='visible')await requestWakeLock();
+        },{once:true});
+      });
+    }
+  }catch(e){}
+}
+function releaseWakeLock(){
+  if(_wakeLock)try{_wakeLock.release();_wakeLock=null;}catch(e){}
+}
+
+// WakeLock neu anfordern wenn Tab wieder sichtbar wird
+document.addEventListener('visibilitychange',async()=>{
+  if(document.visibilityState==='visible'&&tvConn){
+    await requestWakeLock();
+    // Prüfe ob Verbindung noch offen
+    if(!tvConn.open)autoReconnect();
+  }
+});
 </script>
 </body>
 </html>
