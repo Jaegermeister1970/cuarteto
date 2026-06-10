@@ -205,6 +205,21 @@ select{width:100%;padding:10px 28px 10px 11px;border-radius:10px;border:1px soli
       <div id="w-players"></div>
     </div>
     <div class="start-section" id="start-section" style="display:none">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Spielmodus</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
+        <div class="mode-opt active" id="mopt-classic" onclick="pickMode('classic')" style="background:var(--bg2);border:2px solid var(--red);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px">
+          <span style="font-size:22px">🃏</span>
+          <div><div style="font-size:14px;font-weight:700;color:var(--red)">Klassisch</div><div style="font-size:11px;color:var(--text3)">Karten sammeln &amp; Quartette ablegen</div></div>
+        </div>
+        <div class="mode-opt" id="mopt-duell" onclick="pickMode('duell')" style="background:var(--bg2);border:2px solid var(--bg3);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px">
+          <span style="font-size:22px">⚔️</span>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text2)">Kategorie-Duell</div><div style="font-size:11px;color:var(--text3)">Kategorie wählen — höherer Wert gewinnt!</div></div>
+        </div>
+        <div class="mode-opt" id="mopt-trump" onclick="pickMode('trump')" style="background:var(--bg2);border:2px solid var(--bg3);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px">
+          <span style="font-size:22px">👑</span>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text2)">Supertrumpf</div><div style="font-size:11px;color:var(--text3)">Karte offen — alle spielen dagegen!</div></div>
+        </div>
+      </div>
       <button class="btn btn-red" onclick="doStart()">Spiel starten</button>
     </div>
     <div class="wait-row">
@@ -327,7 +342,21 @@ function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remov
 function toast(m,d=2500){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),d)}
 
 let peer=null,tvConn=null,myId='',myName='',tvCode='';
-let GS=null,myHand=[],cardIdx=0,isFirst=false,gPlayers=[];
+let GS=null,myHand=[],cardIdx=0,isFirst=false,gPlayers=[],gameMode='classic';
+const SL_C={p:"Poder",a:"Audacia",v:"Antecedentes",d:"Duración",r:"Resolución",s:"Daño"};
+const SC_C={p:"#E24B4A",a:"#6B4C9A",v:"#8B6100",d:"#1A8C55",r:"#185FA5",s:"#C47A20"};
+let selectedMode='classic';
+
+function pickMode(m){
+  selectedMode=m;
+  ['classic','duell','trump'].forEach(id=>{
+    const el=document.getElementById('mopt-'+id);
+    if(!el)return;
+    const active=id===m;
+    el.style.borderColor=active?'var(--red)':'var(--bg3)';
+    el.querySelector('div>div').style.color=active?'var(--red)':'var(--text2)';
+  });
+}
 
 async function doJoin(){
   const code=($('tv-code').value||'').trim().toUpperCase();
@@ -365,7 +394,7 @@ function onMsg(msg){
   if(msg.t==='err'){toast(msg.m,3500);return}
   if(msg.t==='pl'){gPlayers=msg.pl;renderWait(msg.pl);return}
   if(msg.t==='state'){
-    GS=msg;myHand=msg.hand||[];
+    GS=msg;myHand=msg.hand||[];if(msg.mode)gameMode=msg.mode;
     if(cardIdx>=myHand.length)cardIdx=0;
     if(!$('s-game').classList.contains('on'))show('s-game');
     renderGame();
@@ -376,7 +405,7 @@ function onMsg(msg){
 
 function send(m){try{if(tvConn&&tvConn.open)tvConn.send(m)}catch(e){}}
 
-function doStart(){send({t:'start'})}
+function doStart(){send({t:'start',mode:selectedMode})}
 
 function renderWait(pl){
   $('w-pcount').textContent=pl.length;
@@ -433,8 +462,9 @@ function renderGame(){
   const tb=$('g-turn');
   tb.style.setProperty('--ac',ac);
   $('g-td').style.background=ac;
+  const modeBadge={'classic':'🃏 Klassisch','duell':'⚔️ Kategorie-Duell','trump':'👑 Supertrumpf'}[gameMode]||'';
   $('g-tt').textContent=isMyTurn?'Du bist dran!':curP.name+' ist dran';
-  $('g-ts').textContent=isMyTurn?'Wähle eine Karte und frage an':'Warte auf deinen Zug…';
+  $('g-ts').textContent=(isMyTurn?'Wähle eine Karte und frage an':'Warte auf deinen Zug…')+' · '+modeBadge;
 
   // Big card
   renderBigCard();
@@ -503,12 +533,26 @@ function renderAction(players,curId,isMyTurn){
   const fams=[...new Set(myHand.map(c=>c.f))];
   const pOpts=others.map(p=>`<option value="${p.id}">${p.name} (${p.hc})</option>`).join('');
   const fOpts=fams.map(f=>`<option value="${f}">${FAM[f].es} / ${FAM[f].de}</option>`).join('');
+  // Kategorie-Optionen für Duell/Trump
+  const catOpts=Object.entries(SL_C).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  const catRow=(gameMode==='duell'||gameMode==='trump')?`
+    <div class="ap-wrap" style="grid-column:span 2">
+      <span class="ap-lbl">${gameMode==='duell'?'⚔️ Kategorie (Duell)':'👑 Kategorie (Supertrumpf)'}</span>
+      <select id="asel-cat" style="border-color:var(--red)44">${catOpts}</select>
+    </div>`:'';
+  const modeHint=gameMode==='duell'
+    ?'<div style="font-size:11px;color:#E24B4A;padding:6px 10px;background:#E24B4A11;border-radius:8px">⚔️ Dein Wert muss höher sein um die Karte zu gewinnen!</div>'
+    :gameMode==='trump'
+    ?'<div style="font-size:11px;color:#D4A843;padding:6px 10px;background:#D4A84311;border-radius:8px">👑 Alle spielen ihre stärkste Karte der Familie — höchster Wert gewinnt alle!</div>'
+    :'';
   el.innerHTML=`<div class="ask-panel">
     <div class="ap-hd">Karte anfragen</div>
+    ${modeHint}
     <div class="ap-grid">
       <div class="ap-wrap"><span class="ap-lbl">Von wem?</span><select id="asel-p">${pOpts}</select></div>
       <div class="ap-wrap"><span class="ap-lbl">Familie</span><select id="asel-f" onchange="updCardSel()">${fOpts}</select></div>
       <div class="ap-wrap ap-grid" style="grid-column:span 2"><span class="ap-lbl">Welche Karte?</span><select id="asel-c"></select></div>
+      ${catRow}
     </div>
     <div class="ap-btns">
       <button class="apb red" onclick="doAsk()">📨 Anfragen</button>
@@ -532,7 +576,9 @@ function updCardSel(){
 function doAsk(){
   const tid=$('asel-p')?.value,cv=$('asel-c')?.value,f=$('asel-f')?.value;
   if(!tid||!cv||cv.startsWith('Alle')){toast('Spieler und Karte wählen');return}
-  send({t:'ask',tid,f,n:parseInt(cv.slice(1))});
+  const cat=$('asel-cat')?.value||null;
+  if((gameMode==='duell'||gameMode==='trump')&&!cat){toast('Bitte Kategorie wählen');return}
+  send({t:'ask',tid,f,n:parseInt(cv.slice(1)),cat});
 }
 function doDraw(){send({t:'draw'})}
 
