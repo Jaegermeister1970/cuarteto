@@ -142,6 +142,10 @@ body::before{content:'';position:fixed;inset:0;
 /* Notification popup */
 .notif{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--bg2);border:1px solid #ffffff15;border-radius:40px;padding:12px 28px;font-size:16px;color:var(--text);z-index:50;transition:transform .3s cubic-bezier(.34,1.2,.64,1);pointer-events:none}
 .notif.show{transform:translateX(-50%) translateY(0)}
+.di{display:inline}
+body.es-mode .di{display:none}
+.ei{display:none}
+body.es-mode .ei{display:inline}
 </style>
 </head>
 <body>
@@ -154,46 +158,46 @@ body::before{content:'';position:fixed;inset:0;
   <div class="lobby-box" style="max-width:680px">
     <div class="lb-flag">🇨🇴</div>
     <div class="lb-title">Cuarteto <span>Criminal</span></div>
-    <div class="lb-sub">Jeder Spieler öffnet die Handy-App und gibt diesen Code ein</div>
+    <div class="lb-sub"><span class="di">Jeder Spieler öffnet die Handy-App und gibt diesen Code ein</span><span class="ei">Cada jugador abre la app del móvil e introduce este código</span></div>
     <div style="display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap">
       <div class="lb-code-wrap">
-        <div class="lb-code-lbl">Raum-Code</div>
+        <div class="lb-code-lbl"><span class="di">Raum-Code</span><span class="ei">Código de Sala</span></div>
         <div class="lb-code" id="lb-code">———</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
         <div style="background:#fff;padding:10px;border-radius:12px">
           <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACX0lEQVR4nO2ZQW7cMAxFn0IDs5SBHiBHkW/QI+VMuYF8lNyAXg5A43cheZpNJ4MW6FhAuLLFhT8l8vOLTuKe7S933fDt/zc/cgBTlZcAk8iK3I6lxLPxPeAvkoD9tZrqdV6BaVtMkp8C35f+lBZgYmVb2N4AU2VL00nw3bPpeCjmJMpF7NOyz34SfA/7132GXGGlHcR//v5f+idAMG1LTCl+cE2Y/1yBLLbn43vAv6aUoFy8XD6WixfAnD2lNJ8C333TYeYlcgXkJXJfPD1/NrTVvATFHCByJdcWwgD4VQPkRU5QyJIXebF2Is/G98j+k2V+2/ZqTm9eA/RfpGqqAebIS1uRF/MySv6YY6rkHkW0BymG2H/HnAbYpMgyVVMla4T8eYEC5SLt8xrbYs51hu2tt+AT4LtvcuygoKBINXJtclpD8I8UubbMaSG0KMiVPEL9drYsapXbq7iYM0L9vpB1ndc0s7/KHLbFvAnRk+D7wpp+iFyleltp6TRK/pBr2/NWC1I9OvIQ+EtAZEVWa8GSWjgj5P8EkN+njPlKVsrvU6yxIdhPgO8R/dCZ35FEVisEG0X/S71gj8qV96IYIX+QamQFBKU1sr7zY+ifpplL12wU668yZ4z7i2pAQBwsampEOkj+O5HV1A4tiuPyNUb+NDvGJjflrzH0z+/5s0m3m2ObRQyCv3wa/hSp6pCjNkb+d8LpF/msLoeatHg2vkf925Jm9hm2ZB9LUAL213oafH+0G/+Tq/XJ1aeO9mx8j+Z/o50sU5UTwDj8T7swSm2Q0ieKGkL/pO//p0/1/wLSGyzz+Qyh5AAAAABJRU5ErkJggg==" style="width:90px;height:90px;display:block" alt="QR Controller">
         </div>
-        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Controller scannen</div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)"><span class="di">Controller scannen</span><span class="ei">Escanear control</span></div>
       </div>
     </div>
     <div class="lb-players" id="lb-players">
-      <div style="font-size:13px;color:var(--text3)">Warte auf Spieler…</div>
+      <div style="font-size:13px;color:var(--text3)"><span class="di">Warte auf Spieler…</span><span class="ei">Esperando jugadores…</span></div>
     </div>
 
     <!-- MODUS-AUSWAHL -->
     <div style="width:100%;margin-top:4px">
-      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;text-align:center">Spielmodus wählen</div>
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;text-align:center"><span class="di">Spielmodus wählen</span><span class="ei">Elegir modo de juego</span></div>
       <div style="display:flex;gap:12px;width:100%">
         <div class="mode-card active" id="mode-classic" onclick="selectMode('classic')" style="flex:1;background:var(--bg3);border:2px solid var(--red);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s">
           <div style="font-size:22px;margin-bottom:6px">🃏</div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--red)">Klassisch</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5">Karten sammeln &amp; Quartette ablegen. Wer die meisten Quartette hat gewinnt.</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--red)"><span class="di">Klassisch</span><span class="ei">Clásico</span></div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5"><span class="di">Karten sammeln &amp; Quartette ablegen. Wer die meisten Quartette hat gewinnt.</span><span class="ei">Colecciona cartas y coloca cuartetos. Gana quien tenga más.</span></div>
         </div>
         <div class="mode-card" id="mode-duell" onclick="selectMode('duell')" style="flex:1;background:var(--bg3);border:2px solid var(--bg4);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s">
           <div style="font-size:22px;margin-bottom:6px">⚔️</div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text2)">Kategorie-Duell</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5">Beim Anfragen eine Kategorie wählen. Höherer Wert gewinnt die Karte!</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text2)"><span class="di">Kategorie-Duell</span><span class="ei">Duelo de Categoría</span></div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5"><span class="di">Beim Anfragen eine Kategorie wählen. Höherer Wert gewinnt die Karte!</span><span class="ei">Al pedir, elige una categoría. ¡El valor más alto gana la carta!</span></div>
         </div>
         <div class="mode-card" id="mode-trump" onclick="selectMode('trump')" style="flex:1;background:var(--bg3);border:2px solid var(--bg4);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s">
           <div style="font-size:22px;margin-bottom:6px">👑</div>
           <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text2)">Supertrumpf</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5">Karte offen spielen &amp; Kategorie wählen. Höchster Wert gewinnt alle Karten!</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5"><span class="di">Karte offen spielen &amp; Kategorie wählen. Höchster Wert gewinnt alle Karten!</span><span class="ei">Juega una carta abierta y elige categoría. ¡El valor más alto gana todas las cartas!</span></div>
         </div>
       </div>
     </div>
 
-    <div class="lb-start-hint" id="lb-start-hint">Mindestens 2 Spieler nötig zum Starten</div>
+    <div class="lb-start-hint" id="lb-start-hint"><span class="di">Mindestens 2 Spieler nötig zum Starten</span><span class="ei">Se necesitan al menos 2 jugadores</span></div>
   </div>
 </div>
 
@@ -203,7 +207,7 @@ body::before{content:'';position:fixed;inset:0;
     <div class="end-trophy" id="end-trophy">🏆</div>
     <div class="end-title" id="end-title">SIEGER!</div>
     <div class="podium" id="end-podium"></div>
-    <div class="end-hint">Spieler können über die Handy-App ein neues Spiel starten</div>
+    <div class="end-hint"><span class="di">Spieler können über die Handy-App ein neues Spiel starten</span><span class="ei">Los jugadores pueden iniciar una nueva partida desde la app del móvil</span></div>
   </div>
 </div>
 
@@ -216,13 +220,17 @@ body::before{content:'';position:fixed;inset:0;
     </div>
     <div class="qr-wrap">
       <div class="qr-txt">
-        <div class="qr-label">Raum-Code</div>
+        <div class="qr-label"><span class="di">Raum-Code</span><span class="ei">Código de Sala</span></div>
         <div class="qr-room" id="hdr-code">———</div>
-        <div class="qr-hint">Handy-App öffnen &amp; Code eingeben</div>
+        <div class="qr-hint"><span class="di">Handy-App öffnen &amp; Code eingeben</span><span class="ei">Abrir app del móvil e introducir código</span></div>
       </div>
     </div>
     <div class="hdr-right">
-      <div class="deck-badge">Stapel: <strong id="deck-count">0</strong></div>
+      <div style="display:flex;gap:6px;margin-right:8px">
+        <button onclick="setLang('de')" id="lbtn-de" style="padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid #ffffff20;background:#C8122A;color:#fff;transition:all .2s" class="lang-sw">🇩🇪</button>
+        <button onclick="setLang('es')" id="lbtn-es" style="padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid #ffffff20;background:transparent;color:#ffffff88;transition:all .2s" class="lang-sw">🇨🇴</button>
+      </div>
+      <div class="deck-badge"><span class="di">Stapel:</span><span class="ei">Mazo:</span> <strong id="deck-count">0</strong></div>
     </div>
   </div>
 
@@ -232,7 +240,7 @@ body::before{content:'';position:fixed;inset:0;
       <div class="turn-banner" id="turn-banner">
         <div class="tb-dot" id="tb-dot"></div>
         <div class="tb-name" id="tb-name">—</div>
-        <div class="tb-sub" id="tb-sub">ist am Zug</div>
+        <div class="tb-sub" id="tb-sub"><span class="di">ist am Zug</span><span class="ei">tiene el turno</span></div>
         <div class="tb-action" id="tb-action"></div>
       </div>
 
@@ -245,13 +253,13 @@ body::before{content:'';position:fixed;inset:0;
 
     <!-- Sidebar log -->
     <div class="sidebar">
-      <div class="sb-head"><div class="sb-title">Spielverlauf</div></div>
+      <div class="sb-head"><div class="sb-title"><span class="di">Spielverlauf</span><span class="ei">Historial</span></div></div>
       <div class="log-list" id="log-list"></div>
     </div>
   </div>
 
   <div class="footer">
-    <div class="footer-hint">🇨🇴 Cuarteto Criminal Colombia — 36 Karten · 9 Familien · 6 Kategorien</div>
+    <div class="footer-hint">🇨🇴 Cuarteto Criminal Colombia — <span class="di">36 Karten · 9 Familien · 6 Kategorien</span><span class="ei">36 Cartas · 9 Familias · 6 Categorías</span></div>
     <div class="conn-row" id="conn-row"></div>
   </div>
 </div>
@@ -353,7 +361,7 @@ async function init(){
     peer=new Peer('cqtv-'+roomCode,{debug:0});
     peer.on('open',()=>{renderLobby()});
     peer.on('connection',onConn);
-    peer.on('error',e=>notif('Verbindungsfehler: '+e.type));
+    peer.on('error',e=>notif((document.body.classList.contains('es-mode')?'Error de conexión: ':'Verbindungsfehler: ')+e.type));
   }catch(e){notif('PeerJS Fehler')}
 }
 
@@ -370,7 +378,7 @@ function onConn(c){
           GS.deck.push(...GS.players[i].hand);
           GS.players.splice(i,1);
           if(GS.cur>=GS.players.length)GS.cur=0;
-          addLog('⚠️ '+nm+' hat Verbindung verloren.','s');
+          addLog('⚠️ '+nm+(document.body.classList.contains('es-mode')?' ha perdido la conexión.':' hat Verbindung verloren.'),'s');
           bcast();
         }
       } else renderLobby();
@@ -388,7 +396,7 @@ function onMsg(pid,msg){
     GS.players.push({id:pid,name:msg.name,hand:[],quartetts:[]});
     renderLobby();
     bcastPlayers();
-    notif(msg.name+' ist beigetreten!');
+    notif(msg.name+(document.body.classList.contains('es-mode')?' se ha unido!':' ist beigetreten!'));
     return;
   }
   if(msg.t==='start'){
@@ -419,15 +427,15 @@ function onMsg(pid,msg){
           if(askerVal>=targetVal){
             const card=GS.players[ti].hand.splice(fi,1)[0];
             GS.players[ai].hand.push(card);
-            addLog('⚔️ '+an+' gewinnt! '+SL_TV[cat]+': '+askerVal+' > '+targetVal,'g');
-            notif('⚔️ '+an+' gewinnt das Duell! ('+askerVal+' vs '+targetVal+')');
+            addLog('⚔️ '+an+(document.body.classList.contains('es-mode')?' gana! ':'  gewinnt! ')+SL_TV[cat]+': '+askerVal+' > '+targetVal,'g');
+            notif('⚔️ '+an+(document.body.classList.contains('es-mode')?' gana el duelo! (':'  gewinnt das Duell! (')+askerVal+' vs '+targetVal+')');
             chkQ(ai);
             if(gameOver()){endGame();return}
             lastAsk=null;
             bcast();
           }else{
-            addLog('⚔️ '+an+' verliert Duell! '+SL_TV[cat]+': '+askerVal+' < '+targetVal+'','b');
-            notif('⚔️ '+tn+' behält die Karte! ('+targetVal+' > '+askerVal+')');
+            addLog('⚔️ '+an+(document.body.classList.contains('es-mode')?' pierde el duelo! ':' verliert Duell! ')+SL_TV[cat]+': '+askerVal+' < '+targetVal,'b');
+            notif('⚔️ '+tn+(document.body.classList.contains('es-mode')?' conserva la carta! ('+targetVal+' > '+askerVal+')':' behält die Karte! ('+targetVal+' > '+askerVal+')'));
             lastAsk=null;
             GS.cur=(GS.cur+1)%GS.players.length;
             bcast();
@@ -455,8 +463,8 @@ function onMsg(pid,msg){
           }).filter(Boolean);
           winCards.forEach(c=>GS.players[winner].hand.push(c));
           const wn=GS.players[winner].name;
-          addLog('👑 Supertrumpf '+SL_TV[cat]+'! '+wn+' gewinnt '+winCards.length+' Karten ('+winVal+')','q');
-          notif('👑 '+wn+' gewinnt '+winCards.length+' Karten!',4000);
+          addLog('👑 Supertrumpf '+SL_TV[cat]+'! '+wn+(document.body.classList.contains('es-mode')?' gana ':' gewinnt ')+winCards.length+(document.body.classList.contains('es-mode')?' cartas ('+winVal+')':' Karten ('+winVal+')'),'q');
+          notif('👑 '+wn+(document.body.classList.contains('es-mode')?' gana ':' gewinnt ')+winCards.length+(document.body.classList.contains('es-mode')?' cartas!':' Karten!'),4000);
           chkQ(winner);
           if(gameOver()){endGame();return}
           GS.cur=winner; // Gewinner ist als nächstes dran
@@ -468,13 +476,13 @@ function onMsg(pid,msg){
         // KLASSISCH
         const card=GS.players[ti].hand.splice(fi,1)[0];
         GS.players[ai].hand.push(card);
-        addLog('✅ '+an+' → '+tn+': '+msg.f+msg.n+' ('+CARDS.find(c=>c.f===msg.f&&c.n===msg.n)?.nm+') erhalten!','g');
-        notif('✅ '+an+' erhält '+msg.f+msg.n+' von '+tn+'!');
+        addLog('✅ '+an+' → '+tn+': '+msg.f+msg.n+' ('+(CARDS.find(c=>c.f===msg.f&&c.n===msg.n)?.nm||'')+(document.body.classList.contains('es-mode')?') obtenida!':') erhalten!'),'g');
+        notif('✅ '+an+(document.body.classList.contains('es-mode')?' obtiene ':' erhält ')+msg.f+msg.n+(document.body.classList.contains('es-mode')?' de ':' von ')+tn+'!');
         chkQ(ai);
         if(gameOver()){endGame();return}
         lastAsk=null;
       }else{
-        addLog('❌ '+an+' fragt '+tn+' nach '+msg.f+msg.n+' — nicht vorhanden.','b');
+        addLog('❌ '+an+(document.body.classList.contains('es-mode')?' pide a ':' fragt ')+tn+(document.body.classList.contains('es-mode')?' la carta ':' nach ')+msg.f+msg.n+(document.body.classList.contains('es-mode')?' — no disponible.':' — nicht vorhanden.'),'b');
         hostDraw(ai);lastAsk=null;return;
       }
       bcast();
@@ -494,8 +502,8 @@ function startGame(){
   GS.players.forEach(p=>{p.hand=d.splice(0,pp);p.quartetts=[]});
   GS.deck=d;GS.cur=0;GS.started=true;
   for(let i=0;i<GS.players.length;i++)chkQ(i);
-  const modeNames={'classic':'Klassisch','duell':'Kategorie-Duell','trump':'Supertrumpf'};
-  addLog('🃏 Spiel gestartet! Modus: '+modeNames[GS.mode]+'. '+GS.players[0].name+' beginnt.','s');
+  const modeNames={classic:document.body.classList.contains('es-mode')?'Clásico':'Klassisch',duell:document.body.classList.contains('es-mode')?'Duelo de Categoría':'Kategorie-Duell',trump:'Supertrumpf'};
+  addLog('🃏 '+(document.body.classList.contains('es-mode')?'¡Partida iniciada! Modo: ':'Spiel gestartet! Modus: ')+modeNames[GS.mode]+(document.body.classList.contains('es-mode')?'. Empieza ':'! ')+GS.players[0].name+(document.body.classList.contains('es-mode')?'.':' beginnt.'),'s');
   $('scr-lobby').classList.add('hide');
   bcast();renderBoard();
 }
@@ -504,9 +512,9 @@ function hostDraw(i){
   if(GS.deck.length>0){
     const c=GS.deck.pop();
     GS.players[i].hand.push(c);
-    addLog('📥 '+GS.players[i].name+' zieht eine Karte.','s');
+    addLog('📥 '+GS.players[i].name+(document.body.classList.contains('es-mode')?' roba una carta.':' zieht eine Karte.'),'s');
     chkQ(i);
-  }else addLog('Stapel leer.','s');
+  }else addLog(document.body.classList.contains('es-mode')?'Mazo vacío.':'Stapel leer.','s');
   if(gameOver()){endGame();return}
   GS.cur=(GS.cur+1)%GS.players.length;
   bcast();
@@ -519,8 +527,8 @@ function chkQ(i){
     if(fc[f]===4){
       p.hand=p.hand.filter(c=>c.f!==f);
       p.quartetts.push(f);
-      addLog('🎴 '+p.name+' legt "'+FAM[f].de+'" ab!','q');
-      notif('🎴 QUARTETT! '+p.name+' — '+FAM[f].de,4000);
+      addLog('🎴 '+p.name+(document.body.classList.contains('es-mode')?' coloca cuarteto "':' legt "')+FAM[f].de+'"!','q');
+      notif('🎴 '+(document.body.classList.contains('es-mode')?'¡CUARTETO! ':'QUARTETT! ')+p.name+' — '+FAM[f].de,4000);
     }
   });
 }
@@ -535,7 +543,7 @@ function endGame(){
   bcast({t:'end',sc});
   const w=sc[0];
   $('end-trophy').textContent=w.q===0?'🤝':'🏆';
-  $('end-title').textContent=w.q===0?'UNENTSCHIEDEN':w.name.toUpperCase()+' GEWINNT!';
+  $('end-title').textContent=w.q===0?(document.body.classList.contains('es-mode')?'EMPATE':'UNENTSCHIEDEN'):(w.name.toUpperCase()+(document.body.classList.contains('es-mode')?' GANA!':' GEWINNT!'));
   const pod=$('end-podium');
   pod.innerHTML='';
   ['🥇','🥈','🥉','4️⃣'].slice(0,sc.length).forEach((m,i)=>{
@@ -582,17 +590,18 @@ function send(pid,msg){try{if(conns[pid])conns[pid].send(msg)}catch(e){}}
 /* ── RENDER LOBBY ── */
 function renderLobby(){
   const pl=$('lb-players');
-  if(GS.players.length===0){pl.innerHTML='<div style="font-size:13px;color:var(--text3)">Warte auf Spieler…</div>';return}
+  if(GS.players.length===0){pl.innerHTML='<div style="font-size:13px;color:var(--text3)"><span class="di">Warte auf Spieler…</span><span class="ei">Esperando jugadores…</span></div>';return}
   pl.innerHTML=GS.players.map((p,i)=>`
     <div class="lb-player-chip">
       <div class="lb-pc-dot" style="background:${PC[i%4]}"></div>
       <span class="lb-pc-name" style="color:${PC[i%4]}">${p.name}</span>
     </div>`).join('');
-  const modeLabels={'classic':'🃏 Klassisch','duell':'⚔️ Kategorie-Duell','trump':'👑 Supertrumpf'};
-  const modeHint=` · Modus: ${modeLabels[GS.mode]||'Klassisch'}`;
+  const isEs=document.body.classList.contains('es-mode');
+  const modeLabels={'classic':'🃏 '+(isEs?'Clásico':'Klassisch'),'duell':'⚔️ '+(isEs?'Duelo de Categoría':'Kategorie-Duell'),'trump':'👑 Supertrumpf'};
+  const modeHint=` · ${isEs?'Modo':'Modus'}: ${modeLabels[GS.mode]||'Klassisch'}`;
   $('lb-start-hint').textContent=GS.players.length<2
-    ?'Mindestens 2 Spieler nötig zum Starten'
-    :`${GS.players.length} Spieler bereit — Mitspieler können Spiel starten${modeHint}`;
+    ?(isEs?'Se necesitan al menos 2 jugadores para iniciar':'Mindestens 2 Spieler nötig zum Starten')
+    :`${GS.players.length} ${isEs?'jugadores listos — un jugador puede iniciar':'Spieler bereit — Mitspieler können Spiel starten'}${modeHint}`;
 }
 
 /* ── RENDER BOARD ── */
@@ -606,7 +615,7 @@ function renderBoard(){
   $('tb-dot').style.background=ac;
   $('tb-name').textContent=cp?.name||'—';
   $('tb-name').style.color=ac;
-  $('tb-sub').textContent='ist am Zug';
+  $('tb-sub').textContent=document.body.classList.contains('es-mode')?'tiene turno':'ist am Zug';
   if(!lastAsk)$('tb-action').textContent='';
   $('deck-count').textContent=GS.deck.length;
   renderPlayers();
@@ -624,14 +633,14 @@ function renderPlayers(){
     const qpills=p.quartetts.map(f=>`<span class="qp" style="background:${FAM[f].bg};color:${FAM[f].c}">${FAM[f].de}</span>`).join('');
     div.innerHTML=`<div class="pc-top">
       <div class="pc-avatar">${p.name[0].toUpperCase()}</div>
-      <div><div class="pc-name">${p.name}</div><div class="pc-status">${isActive?'Am Zug ●':'Wartet'}</div></div>
+      <div><div class="pc-name">${p.name}</div><div class="pc-status">${isActive?(document.body.classList.contains('es-mode')?'En turno ●':'Am Zug ●'):(document.body.classList.contains('es-mode')?'Esperando':'Wartet')}</div></div>
     </div>
     <div class="pc-stats">
-      <div><div class="pc-cards">${p.hc||p.hand?.length||0}</div><div class="pc-cards-lbl">Karten</div></div>
+      <div><div class="pc-cards">${p.hc||p.hand?.length||0}</div><div class="pc-cards-lbl"><span class="di">Karten</span><span class="ei">Cartas</span></div></div>
       <div class="pc-sep"></div>
-      <div><div class="pc-q-count">${p.quartetts.length}</div><div class="pc-q-lbl">Quartette</div></div>
+      <div><div class="pc-q-count">${p.quartetts.length}</div><div class="pc-q-lbl"><span class="di">Quartette</span><span class="ei">Cuartetos</span></div></div>
     </div>
-    <div class="pc-qpills">${qpills||'<span style="font-size:10px;color:var(--text3)">Noch keine</span>'}</div>`;
+    <div class="pc-qpills">${qpills||document.body.classList.contains('es-mode')?'<span style="font-size:10px;color:var(--text3)">Sin cuartetos</span>':document.body.classList.contains('es-mode')?'<span style="font-size:10px;color:var(--text3)">Sin cuartetos</span>':'<span style="font-size:10px;color:var(--text3)">Noch keine</span>'}</div>`;
     row.appendChild(div);
   });
 }
@@ -693,6 +702,18 @@ function addLog(m,cls=''){
   while(el.children.length>30)el.removeChild(el.lastChild);
 }
 
+function setLang(l){
+  document.body.classList.toggle('es-mode',l==='es');
+  localStorage.setItem('cq-lang-tv',l);
+  const de=document.getElementById('lbtn-de');
+  const es=document.getElementById('lbtn-es');
+  if(de){de.style.background=l==='de'?'#C8122A':'transparent';de.style.color=l==='de'?'#fff':'#ffffff88';}
+  if(es){es.style.background=l==='es'?'#C8122A':'transparent';es.style.color=l==='es'?'#fff':'#ffffff88';}
+  renderBoard&&GS&&GS.started&&renderBoard();
+  renderLobby&&renderLobby();
+}
+const savedLangTV=localStorage.getItem('cq-lang-tv');
+if(savedLangTV==='es')document.body.classList.add('es-mode');
 init();
 </script>
 </body>
