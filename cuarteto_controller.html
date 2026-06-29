@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Cuarteto — Controller</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#C8122A;--gold:#D4A843;
@@ -19,147 +19,165 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text)}
 
-.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .2s,transform .2s;overflow-y:auto}
-.scr.on{opacity:1;pointer-events:all;transform:none}
+/* ── SCREENS ── */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto}
+.scr.on{opacity:1;pointer-events:all}
 
 /* ── TOAST ── */
-#toast{position:fixed;bottom:calc(var(--safe-b)+16px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg2);border:1px solid #ffffff15;border-radius:40px;padding:9px 20px;font-size:13px;color:var(--text);opacity:0;transition:all .25s;z-index:999;pointer-events:none;text-align:center;white-space:nowrap;max-width:90vw}
+#toast{position:fixed;bottom:calc(var(--safe-b)+20px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg2);border:1px solid #ffffff20;border-radius:40px;padding:11px 24px;font-size:15px;color:var(--text);opacity:0;transition:all .25s;z-index:999;pointer-events:none;text-align:center;max-width:90vw;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── LOBBY ── */
-.hero{background:var(--red);padding:calc(var(--safe-t)+24px) 20px 28px;text-align:center}
-.hero-flag{font-size:32px;margin-bottom:6px}
-.hero-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.5px}
-.hero-sub{font-size:12px;color:#ffffff88;margin-top:3px}
-.body{padding:20px 20px calc(var(--safe-b)+20px);display:flex;flex-direction:column;gap:14px}
-.inp{width:100%;padding:13px 16px;border-radius:12px;border:1px solid #ffffff12;background:var(--bg3);color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;outline:none}
-.inp:focus{border-color:#ffffff28}
+.lobby-top{background:var(--red);padding:calc(var(--safe-t)+32px) 24px 32px;text-align:center}
+.lobby-flag{font-size:44px;margin-bottom:10px}
+.lobby-title{font-size:28px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.lobby-sub{font-size:13px;color:#ffffff88;margin-top:4px}
+.lobby-body{padding:28px 24px calc(var(--safe-b)+28px);display:flex;flex-direction:column;gap:18px}
+.field-lbl{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.inp{width:100%;padding:16px 18px;border-radius:14px;border:1px solid #ffffff12;background:var(--bg3);color:var(--text);font-size:18px;font-family:'DM Sans',sans-serif;outline:none}
+.inp:focus{border-color:#ffffff30}
 .inp::placeholder{color:var(--text3)}
-.sec-lbl{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
-.code-inp{letter-spacing:6px;font-size:22px;font-weight:700;text-align:center;text-transform:uppercase}
-.btn{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;text-align:center;transition:opacity .15s}
-.btn:active{opacity:.7}
-.btn-red{background:var(--red);color:#fff}
-.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid #ffffff12}
-.divider{display:flex;align-items:center;gap:10px;color:var(--text3);font-size:12px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#ffffff08}
+.code-inp{letter-spacing:8px;font-size:26px;font-weight:700;text-align:center;text-transform:uppercase}
+.big-btn{width:100%;padding:18px;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;border:none;text-align:center;transition:opacity .15s,transform .1s}
+.big-btn:active{opacity:.75;transform:scale(.98)}
+.big-btn-red{background:var(--red);color:#fff}
+.big-btn-gold{background:var(--gold);color:#1A1200}
+.big-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.hint-txt{font-size:13px;color:var(--text3);text-align:center;line-height:1.6}
 
-/* ── WAITING ── */
-.wait-hero{background:var(--red);padding:calc(var(--safe-t)+16px) 20px 16px;display:flex;align-items:center;justify-content:space-between}
-.wh-title{font-size:14px;font-weight:600;color:#fff;letter-spacing:.5px}
-.wh-right{font-size:12px;color:#ffffff88;display:flex;align-items:center;gap:6px}
-.dot{width:7px;height:7px;border-radius:50%;background:#fff}
-.dot.ok{background:#4DD}
-.dot.pulse{animation:dp 1.4s infinite}
+/* ── WAIT ── */
+.wait-top{background:var(--red);padding:calc(var(--safe-t)+16px) 20px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.wait-title{font-size:16px;font-weight:700;color:#fff}
+.conn-pill{display:flex;align-items:center;gap:6px;font-size:12px;color:#ffffff88}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:#4DD;flex-shrink:0}
+.conn-dot.err{background:#F66}
+.conn-dot.pulse{animation:dp 1.4s infinite}
 @keyframes dp{0%,100%{opacity:1}50%{opacity:.2}}
+.wait-body{padding:20px 20px calc(var(--safe-b)+20px);display:flex;flex-direction:column;gap:16px}
 
-.code-display{background:var(--bg2);border:1px solid #ffffff0A;border-radius:14px;padding:18px;text-align:center;margin:0 20px}
-.cd-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
-.cd-code{font-size:40px;font-weight:700;color:var(--gold);letter-spacing:10px;cursor:pointer}
-.cd-hint{font-size:11px;color:var(--text3);margin-top:4px}
+/* Code-Box */
+.code-box{background:var(--bg2);border:1px solid #ffffff0D;border-radius:16px;padding:20px;text-align:center}
+.code-lbl{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.code-val{font-size:48px;font-weight:700;color:var(--gold);letter-spacing:12px;cursor:pointer;line-height:1}
+.code-hint{font-size:12px;color:var(--text3);margin-top:6px}
 
-.players-box{background:var(--bg2);border:1px solid #ffffff0A;border-radius:14px;overflow:hidden;margin:0 20px}
-.pb-head{padding:11px 16px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid #ffffff06}
-.pl-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #ffffff05}
+/* Spieler-Liste */
+.players-box{background:var(--bg2);border:1px solid #ffffff0D;border-radius:16px;overflow:hidden}
+.players-hdr{padding:13px 18px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid #ffffff08}
+.pl-row{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #ffffff06}
 .pl-row:last-child{border-bottom:none}
-.pl-dot{width:9px;height:9px;border-radius:50%}
-.pl-name{flex:1;font-size:14px;font-weight:500}
-.pl-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--bg3);color:var(--text3)}
+.pl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.pl-name{flex:1;font-size:17px;font-weight:600}
+.pl-badge{font-size:11px;padding:3px 10px;border-radius:10px;background:var(--bg3);color:var(--text3)}
 .pl-badge.me{background:#C8122A22;color:var(--red)}
 
-.spinner{width:20px;height:20px;border:2px solid #ffffff10;border-top-color:var(--red);border-radius:50%;animation:sp .75s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.wait-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text3);padding:0 20px}
+/* Modus-Anzeige */
+.mode-box{background:var(--bg2);border:1px solid #ffffff0D;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px}
+.mode-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.mode-val{font-size:18px;font-weight:700}
 
-.start-section{padding:0 20px;display:flex;flex-direction:column;gap:8px}
+.spinner{width:22px;height:22px;border:2px solid #ffffff10;border-top-color:var(--red);border-radius:50%;animation:sp .75s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.wait-status{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text3)}
 
 /* ── GAME ── */
-.game-top{background:var(--red);padding:calc(var(--safe-t)+10px) 16px 10px;flex-shrink:0}
-.gt-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
-.gt-title{font-size:13px;font-weight:600;color:#fff;letter-spacing:.5px}
-.gt-deck{font-size:11px;color:#ffffff88}
+.game-top{background:var(--red);padding:calc(var(--safe-t)+12px) 20px 12px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.game-title{font-size:15px;font-weight:700;color:#fff}
+.game-info{display:flex;align-items:center;gap:8px}
+.g-conn{width:8px;height:8px;border-radius:50%;background:#4DD;flex-shrink:0}
+.g-conn.err{background:#F66}
+.deck-lbl{font-size:12px;color:#ffffff88}
 
-/* Score strip */
-.score-strip{display:flex;background:var(--bg2);border-bottom:1px solid #ffffff08;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
-.score-strip::-webkit-scrollbar{display:none}
-.sc{min-width:72px;flex:1;padding:7px 8px;text-align:center;border-right:1px solid #ffffff06;transition:background .2s}
-.sc:last-child{border-right:none}
-.sc.me{background:color-mix(in srgb,var(--pc) 14%,var(--bg2))}
-.sc.cur{border-top:2px solid var(--pc)}
-.sc-nm{font-size:9px;font-weight:600;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sc-pt{font-size:18px;font-weight:700;color:var(--pc);line-height:1.1}
-.sc-lb{font-size:8px;color:var(--text3)}
+/* Score-Leiste */
+.score-bar{display:flex;background:var(--bg2);border-bottom:1px solid #ffffff08;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.score-bar::-webkit-scrollbar{display:none}
+.sc-item{flex:1;min-width:70px;padding:10px 8px;text-align:center;border-right:1px solid #ffffff06}
+.sc-item:last-child{border-right:none}
+.sc-item.me{background:color-mix(in srgb,var(--pc) 15%,var(--bg2))}
+.sc-item.cur{border-top:3px solid var(--pc)}
+.sc-name{font-size:11px;font-weight:600;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-pts{font-size:22px;font-weight:700;color:var(--pc);line-height:1.1}
+.sc-lbl{font-size:9px;color:var(--text3)}
 
-/* Turn bar */
-.turn-bar{padding:9px 14px;display:flex;align-items:center;gap:9px;background:var(--bg3);border-bottom:1px solid #ffffff08;flex-shrink:0;transition:all .3s}
-.td{width:7px;height:7px;border-radius:50%;background:var(--ac,#C8122A);flex-shrink:0;animation:dp 1.4s infinite}
-.tt{font-size:13px;font-weight:600;flex:1}
-.ts{font-size:11px;color:var(--text2)}
+/* Zug-Banner */
+.turn-banner{padding:14px 20px;display:flex;align-items:center;gap:12px;background:var(--bg3);border-bottom:1px solid #ffffff08;flex-shrink:0;transition:background .3s}
+.turn-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;animation:dp 1.4s infinite}
+.turn-name{font-size:20px;font-weight:700;flex:1}
+.turn-sub{font-size:13px;color:var(--text2)}
 
-/* Body */
-.g-body{flex:1;overflow-y:auto;scrollbar-width:none;padding:12px;display:flex;flex-direction:column;gap:10px}
-.g-body::-webkit-scrollbar{display:none}
+/* Haupt-Aktionsbereich */
+.game-body{flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column}
+.game-body::-webkit-scrollbar{display:none}
 
-/* My hand — swipeable big cards */
-.hand-section{}
-.hand-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.hand-lbl{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
-.hand-count{font-size:11px;color:var(--text3)}
-.big-card{background:var(--bg2);border-radius:16px;border:1px solid #ffffff0D;overflow:hidden;touch-action:pan-y;transition:transform .15s}
-.big-card.sel{border-color:var(--fc,#C8122A);box-shadow:0 0 0 2px color-mix(in srgb,var(--fc,#C8122A) 30%,transparent)}
-.bc-hd{padding:11px 14px 8px;display:flex;align-items:center;justify-content:space-between}
-.bc-fam{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px}
-.bc-id{font-size:11px;color:var(--text3)}
-.bc-body{padding:0 14px 12px}
-.bc-nm{font-size:19px;font-weight:600;line-height:1.2;margin-bottom:2px}
-.bc-rg{font-size:11px;color:var(--text2);margin-bottom:9px}
-.bc-div{height:1px;background:#ffffff08;margin-bottom:8px}
-.st{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.st-l{font-size:11px;color:var(--text2);width:88px;flex-shrink:0}
-.st-bg{flex:1;height:6px;background:#ffffff0A;border-radius:3px;overflow:hidden}
-.st-f{height:100%;border-radius:3px}
-.st-v{font-size:11px;font-weight:600;min-width:24px;text-align:right}
-.card-dots{display:flex;justify-content:center;gap:5px;padding:4px 0 8px}
-.nd{width:6px;height:6px;border-radius:50%;background:#ffffff18;transition:all .2s}
-.nd.a{background:var(--red);width:14px;border-radius:3px}
-.card-arrows{display:flex;gap:8px;justify-content:center;margin-bottom:4px}
-.ca{background:var(--bg3);border:1px solid #ffffff10;border-radius:10px;padding:8px 20px;font-size:18px;cursor:pointer;color:var(--text2)}
-.ca:active{background:var(--bg4)}
+/* WARTE-PANEL (wenn nicht dran) */
+.wait-panel{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 24px}
+.wp-big-icon{font-size:64px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.wp-name{font-size:28px;font-weight:700;text-align:center}
+.wp-txt{font-size:16px;color:var(--text2);text-align:center}
+.wp-quarts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+.qp{font-size:13px;padding:6px 14px;border-radius:20px;font-weight:700}
 
-/* Ask panel */
-.ask-panel{background:var(--bg2);border-radius:14px;border:1px solid #ffffff0D;padding:14px;display:flex;flex-direction:column;gap:10px}
-.ap-hd{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
-.ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ap-wrap{display:flex;flex-direction:column;gap:3px}
-.ap-lbl{font-size:10px;color:var(--text3)}
-select{width:100%;padding:10px 28px 10px 11px;border-radius:10px;border:1px solid #ffffff10;background:var(--bg3);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364625E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center}
-.ap-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.apb{padding:13px;border-radius:10px;font-size:14px;font-weight:600;text-align:center;cursor:pointer;border:none;transition:opacity .15s}
-.apb:active{opacity:.6}
-.apb.red{background:var(--red);color:#fff}
-.apb.ghost{background:var(--bg3);color:var(--text2);border:1px solid #ffffff10}
+/* AKTIONS-PANEL (wenn dran) */
+.action-panel{flex:1;display:flex;flex-direction:column;padding:16px;gap:12px;overflow-y:auto}
 
-/* Wait pnl */
-.wait-pnl{background:var(--bg2);border-radius:14px;border:1px solid #ffffff0D;padding:22px;text-align:center}
-.wp-ico{font-size:28px;margin-bottom:6px}
-.wp-txt{font-size:14px;color:var(--text2)}
-.wp-who{font-size:14px;font-weight:600}
+/* Eigene Karten — Swipe-Karte */
+.my-cards-header{display:flex;align-items:center;justify-content:space-between}
+.my-cards-lbl{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.card-nav{display:flex;align-items:center;gap:10px}
+.nav-btn{width:36px;height:36px;border-radius:10px;border:1px solid #ffffff12;background:var(--bg3);color:var(--text2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nav-btn:active{background:var(--bg4)}
+.card-counter{font-size:13px;color:var(--text3);min-width:50px;text-align:center}
 
-/* Quarts */
-.qrow{display:flex;flex-wrap:wrap;gap:5px}
-.qp{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600}
+.big-card{background:var(--bg2);border-radius:18px;border:2px solid var(--fc,#C8122A);padding:18px;position:relative;overflow:hidden}
+.big-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--fc,#C8122A)}
+.bc-fam{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.bc-id{font-size:13px;color:var(--text3);float:right;margin-top:2px}
+.bc-nm{font-size:22px;font-weight:700;line-height:1.2;margin-bottom:4px;clear:both}
+.bc-rg{font-size:13px;color:var(--text2);margin-bottom:14px}
+.bc-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat-lbl{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.5px}
+.stat-bar{height:6px;background:#ffffff0A;border-radius:3px;overflow:hidden}
+.stat-fill{height:100%;border-radius:3px}
+.stat-val{font-size:13px;font-weight:700}
 
-/* End screen */
-.end-screen{align-items:center;justify-content:center;gap:12px}
-.end-tro{font-size:60px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+.dots{display:flex;justify-content:center;gap:6px;padding:6px 0}
+.dot-item{width:7px;height:7px;border-radius:50%;background:#ffffff15;transition:all .2s}
+.dot-item.a{background:var(--red);width:18px;border-radius:4px}
+
+/* Anfrage-Formular */
+.ask-form{background:var(--bg2);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.form-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+select{width:100%;padding:14px 36px 14px 16px;border-radius:12px;border:1px solid #ffffff12;background:var(--bg3);color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364625E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.act-btn{padding:16px;border-radius:12px;font-size:16px;font-weight:700;text-align:center;cursor:pointer;border:none;transition:opacity .15s}
+.act-btn:active{opacity:.7}
+.act-btn-red{background:var(--red);color:#fff}
+.act-btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid #ffffff12}
+
+/* Modus-Hinweis */
+.mode-hint{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;text-align:center}
+.mode-hint.duell{background:#E24B4A15;color:#E24B4A;border:1px solid #E24B4A30}
+.mode-hint.trump{background:#D4A84315;color:#D4A843;border:1px solid #D4A84330}
+
+/* END */
+.end-scr{align-items:center;justify-content:center;gap:14px;padding:32px 24px}
+.end-tro{font-size:80px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-.end-ttl{font-size:32px;font-weight:700;color:var(--gold);text-align:center}
-.pod{width:100%;max-width:320px;background:var(--bg2);border:1px solid #ffffff0D;border-radius:14px;overflow:hidden}
-.pod-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #ffffff06}
+.end-ttl{font-size:36px;font-weight:700;color:var(--gold);text-align:center}
+.podium{width:100%;max-width:320px;background:var(--bg2);border:1px solid #ffffff0D;border-radius:16px;overflow:hidden}
+.pod-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid #ffffff06}
 .pod-row:last-child{border-bottom:none}
-.pod-rank{font-size:20px;min-width:26px}
-.pod-name{flex:1;font-size:14px;font-weight:600}
-.pod-sc{font-size:20px;font-weight:700}
+.pod-rank{font-size:24px;min-width:30px}
+.pod-name{flex:1;font-size:16px;font-weight:700}
+.pod-sc{font-size:24px;font-weight:700}
+
+/* Lang */
+.di{display:inline}
+body.es-mode .di{display:none}
+.ei{display:none}
+body.es-mode .ei{display:inline}
 </style>
 </head>
 <body>
@@ -167,102 +185,156 @@ select{width:100%;padding:10px 28px 10px 11px;border-radius:10px;border:1px soli
 
 <!-- LOBBY -->
 <div class="scr on" id="s-lobby">
-  <div class="hero">
-    <div class="hero-flag">🇨🇴</div>
-    <div class="hero-title">Cuarteto Criminal</div>
-    <div class="hero-sub">CONTROLLER — GIB DEN TV-CODE EIN</div>
+  <div class="lobby-top">
+    <div class="lobby-flag">🇨🇴</div>
+    <div class="lobby-title">Cuarteto Criminal</div>
+    <div class="lobby-sub"><span class="di">Controller — TV-Code eingeben</span><span class="ei">Control — Introduce el código TV</span></div>
   </div>
-  <div class="body">
+  <!-- Sprache -->
+  <div style="display:flex;justify-content:center;gap:8px;padding:12px 24px 0">
+    <button onclick="setLang('de')" id="lbtn-de" style="padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #ffffff20;background:#C8122A;color:#fff">🇩🇪 DE</button>
+    <button onclick="setLang('es')" id="lbtn-es" style="padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #ffffff20;background:transparent;color:#ffffff88">🇨🇴 ES</button>
+  </div>
+  <div class="lobby-body">
     <div>
-      <div class="sec-lbl">Dein Name</div>
-      <input class="inp" id="my-name" placeholder="Name eingeben" maxlength="14">
+      <div class="field-lbl"><span class="di">Dein Name</span><span class="ei">Tu Nombre</span></div>
+      <input class="inp" id="my-name" placeholder="Name / Nombre" maxlength="14">
     </div>
     <div>
-      <div class="sec-lbl">TV-Code</div>
+      <div class="field-lbl">TV-Code</div>
       <input class="inp code-inp" id="tv-code" placeholder="XXXXXX" maxlength="6">
     </div>
-    <button class="btn btn-red" onclick="doJoin()">Verbinden &amp; Beitreten</button>
-    <div style="font-size:12px;color:var(--text3);text-align:center;line-height:1.6">
-      Den Code auf dem TV-Bildschirm ablesen und hier eingeben
-    </div>
+    <button class="big-btn big-btn-red" onclick="doJoin()">
+      <span class="di">Verbinden &amp; Beitreten</span>
+      <span class="ei">Conectar &amp; Unirse</span>
+    </button>
+    <p class="hint-txt"><span class="di">Den Code vom TV-Bildschirm ablesen</span><span class="ei">Lee el código de la pantalla del TV</span></p>
   </div>
 </div>
 
-<!-- WAITING -->
+<!-- WARTERAUM -->
 <div class="scr" id="s-wait">
-  <div class="wait-hero">
-    <div class="wh-title">Cuarteto Criminal 🇨🇴</div>
-    <div class="wh-right"><div class="dot ok pulse" id="w-dot"></div><span id="w-conn-txt">Verbunden</span></div>
-  </div>
-  <div class="body" style="gap:12px">
-    <div class="code-display">
-      <div class="cd-lbl">Raum-Code</div>
-      <div class="cd-code" id="w-code" onclick="copyCode()">——————</div>
-      <div class="cd-hint">Tippen zum Kopieren</div>
+  <div class="wait-top">
+    <div class="wait-title">Cuarteto Criminal 🇨🇴</div>
+    <div class="conn-pill">
+      <div class="conn-dot pulse" id="w-dot"></div>
+      <span id="w-conn-txt"><span class="di">Verbunden</span><span class="ei">Conectado</span></span>
     </div>
+  </div>
+  <div class="wait-body">
+    <div class="code-box">
+      <div class="code-lbl"><span class="di">Raum-Code</span><span class="ei">Código de Sala</span></div>
+      <div class="code-val" id="w-code" onclick="copyCode()">——————</div>
+      <div class="code-hint"><span class="di">Tippen zum Kopieren</span><span class="ei">Toca para copiar</span></div>
+    </div>
+
     <div class="players-box">
-      <div class="pb-head">Spieler (<span id="w-pcount">1</span>/4)</div>
+      <div class="players-hdr"><span class="di">Spieler</span><span class="ei">Jugadores</span> (<span id="w-pcount">1</span>/4)</div>
       <div id="w-players"></div>
     </div>
-    <div class="start-section" id="start-section" style="display:none">
-      <div id="mode-display" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid #ffffff0D;border-radius:12px;padding:12px 14px;margin-bottom:4px">
-        <span id="mode-display-icon" style="font-size:22px">🃏</span>
-        <div>
-          <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:2px">Spielmodus (auf TV gewählt)</div>
-          <div id="mode-display-name" style="font-size:14px;font-weight:700;color:var(--red)">Klassisch</div>
-        </div>
+
+    <div class="mode-box" id="mode-display" style="display:none">
+      <span id="mode-display-icon" style="font-size:28px">🃏</span>
+      <div>
+        <div class="mode-lbl"><span class="di">Spielmodus (auf TV gewählt)</span><span class="ei">Modo (elegido en TV)</span></div>
+        <div class="mode-val" id="mode-display-name" style="color:var(--red)"><span class="di">Klassisch</span><span class="ei">Clásico</span></div>
       </div>
-      <button class="btn btn-red" id="start-btn" onclick="doStart()" disabled style="opacity:.35;cursor:not-allowed"><span class="di">Spiel starten</span><span class="ei">Iniciar juego</span></button>
     </div>
-    <div class="wait-row">
+
+    <div id="start-section" style="display:none;flex-direction:column;gap:10px">
+      <button class="big-btn big-btn-red" id="start-btn" onclick="doStart()" disabled style="opacity:.35;cursor:not-allowed">
+        <span class="di">Spiel starten</span><span class="ei">Iniciar juego</span>
+      </button>
+    </div>
+
+    <div class="wait-status">
       <div class="spinner"></div>
-      <span id="w-hint">Warte auf weitere Spieler…</span>
+      <span id="w-hint"><span class="di">Warte auf weitere Spieler…</span><span class="ei">Esperando más jugadores…</span></span>
     </div>
   </div>
 </div>
 
-<!-- GAME -->
+<!-- SPIEL -->
 <div class="scr" id="s-game">
   <div class="game-top">
-    <div class="gt-row1">
-      <span class="gt-title">CUARTETO CRIMINAL 🇨🇴</span>
-      <span style="display:flex;align-items:center;gap:6px">
-        <span id="g-conn-dot" style="width:7px;height:7px;border-radius:50%;background:#4DD;flex-shrink:0"></span>
-        <span class="gt-deck" id="g-deck-lbl">Stapel: 0</span>
-      </span>
+    <div class="game-title">Cuarteto 🇨🇴</div>
+    <div class="game-info">
+      <div class="g-conn" id="g-conn"></div>
+      <span class="deck-lbl" id="g-deck"></span>
     </div>
   </div>
-  <div class="score-strip" id="g-scores"></div>
-  <div class="turn-bar" id="g-turn">
-    <div class="td" id="g-td"></div>
-    <div><div class="tt" id="g-tt">—</div><div class="ts" id="g-ts"></div></div>
+
+  <div class="score-bar" id="g-scores"></div>
+
+  <div class="turn-banner" id="g-turn">
+    <div class="turn-dot" id="g-dot"></div>
+    <div>
+      <div class="turn-name" id="g-turn-name">—</div>
+      <div class="turn-sub" id="g-turn-sub"></div>
+    </div>
   </div>
-  <div class="g-body">
-    <div class="hand-section">
-      <div class="hand-nav">
-        <span class="hand-lbl" id="g-hand-lbl">Meine Hand</span>
-        <span class="hand-count" id="g-hand-cnt">0 Karten</span>
-      </div>
-      <div class="big-card" id="g-bigcard"></div>
-      <div class="card-dots" id="g-dots"></div>
-      <div class="card-arrows">
-        <div class="ca" onclick="navCard(-1)">&#8592;</div>
-        <div class="ca" onclick="navCard(1)">&#8594;</div>
+
+  <!-- Entweder Warte-Panel oder Aktions-Panel -->
+  <div class="wait-panel" id="g-wait" style="display:none">
+    <div class="wp-big-icon" id="wp-icon">⏳</div>
+    <div class="wp-name" id="wp-name"></div>
+    <div class="wp-txt" id="wp-txt"></div>
+    <div class="wp-quarts" id="wp-quarts"></div>
+  </div>
+
+  <div class="action-panel" id="g-action" style="display:none">
+    <div>
+      <div class="my-cards-header">
+        <span class="my-cards-lbl"><span class="di">Meine Karten</span><span class="ei">Mis Cartas</span></span>
+        <div class="card-nav">
+          <button class="nav-btn" onclick="navCard(-1)">‹</button>
+          <span class="card-counter" id="g-card-counter">1/1</span>
+          <button class="nav-btn" onclick="navCard(1)">›</button>
+        </div>
       </div>
     </div>
-    <div class="sec-lbl">Meine Quartette</div>
-    <div class="qrow" id="g-quarts" style="margin-bottom:4px"></div>
-    <div id="g-action"></div>
-    <div style="height:16px"></div>
+
+    <div class="big-card" id="g-bigcard"></div>
+    <div class="dots" id="g-dots"></div>
+
+    <div class="ask-form" id="g-ask-form">
+      <div>
+        <div class="form-lbl"><span class="di">Von wem?</span><span class="ei">¿De quién?</span></div>
+        <select id="asel-p"></select>
+      </div>
+      <div>
+        <div class="form-lbl"><span class="di">Welche Familie?</span><span class="ei">¿Qué familia?</span></div>
+        <select id="asel-f" onchange="updCardSel()"></select>
+      </div>
+      <div>
+        <div class="form-lbl"><span class="di">Welche Karte?</span><span class="ei">¿Qué carta?</span></div>
+        <select id="asel-c"></select>
+      </div>
+      <div id="cat-wrap" style="display:none">
+        <div class="form-lbl" id="cat-lbl">Kategorie</div>
+        <select id="asel-cat"></select>
+      </div>
+      <div id="mode-hint-box"></div>
+      <div class="form-btns">
+        <button class="act-btn act-btn-red" onclick="doAsk()">
+          📨 <span class="di">Anfragen</span><span class="ei">Pedir</span>
+        </button>
+        <button class="act-btn act-btn-ghost" onclick="doDraw()">
+          🃏 <span class="di">Ziehen</span><span class="ei">Robar</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- END -->
-<div class="scr end-screen" id="s-end">
+<!-- ENDE -->
+<div class="scr end-scr" id="s-end">
   <div class="end-tro" id="e-tro">🏆</div>
   <div class="end-ttl" id="e-ttl"></div>
-  <div class="pod" id="e-pod"></div>
-  <button class="btn btn-red" style="width:90%;max-width:300px" onclick="goLobby()">Neues Spiel</button>
+  <div class="podium" id="e-pod"></div>
+  <button class="big-btn big-btn-red" style="width:90%;max-width:300px;margin-top:8px" onclick="goLobby()">
+    <span class="di">Neues Spiel</span><span class="ei">Nueva Partida</span>
+  </button>
 </div>
 
 <script>(()=>{function e(e,t,n,r){Object.defineProperty(e,t,{get:n,set:r,enumerable:!0,configurable:!0})}function t(e){return e&&e.__esModule?e.default:e}class n{constructor(){this.chunkedMTU=16300,this._dataCount=1,this.chunk=e=>{let t=[],n=e.byteLength,r=Math.ceil(n/this.chunkedMTU),i=0,o=0;for(;o<n;){let s=Math.min(n,o+this.chunkedMTU),a=e.slice(o,s),c={__peerData:this._dataCount,n:i,data:a,total:r};t.push(c),o=s,i++}return this._dataCount++,t}}}class r{append_buffer(e){this.flush(),this._parts.push(e)}append(e){this._pieces.push(e)}flush(){if(this._pieces.length>0){let e=new Uint8Array(this._pieces);this._parts.push(e),this._pieces=[]}}toArrayBuffer(){let e=[];for(let t of this._parts)e.push(t);return function(e){let t=0;for(let n of e)t+=n.byteLength;let n=new Uint8Array(t),r=0;for(let t of e){let e=new Uint8Array(t.buffer,t.byteOffset,t.byteLength);n.set(e,r),r+=t.byteLength}return n}(e).buffer}constructor(){this.encoder=new TextEncoder,this._pieces=[],this._parts=[]}}function i(e){return new s(e).unpack()}function o(e){let t=new a,n=t.pack(e);return n instanceof Promise?n.then(()=>t.getBuffer()):t.getBuffer()}class s{unpack(){let e;let t=this.unpack_uint8();if(t<128)return t;if((224^t)<32)return(224^t)-32;if((e=160^t)<=15)return this.unpack_raw(e);if((e=176^t)<=15)return this.unpack_string(e);if((e=144^t)<=15)return this.unpack_array(e);if((e=128^t)<=15)return this.unpack_map(e);switch(t){case 192:return null;case 193:case 212:case 213:case 214:case 215:return;case 194:return!1;case 195:return!0;case 202:return this.unpack_float();case 203:return this.unpack_double();case 204:return this.unpack_uint8();case 205:return this.unpack_uint16();case 206:return this.unpack_uint32();case 207:return this.unpack_uint64();case 208:return this.unpack_int8();case 209:return this.unpack_int16();case 210:return this.unpack_int32();case 211:return this.unpack_int64();case 216:return e=this.unpack_uint16(),this.unpack_string(e);case 217:return e=this.unpack_uint32(),this.unpack_string(e);case 218:return e=this.unpack_uint16(),this.unpack_raw(e);case 219:return e=this.unpack_uint32(),this.unpack_raw(e);case 220:return e=this.unpack_uint16(),this.unpack_array(e);case 221:return e=this.unpack_uint32(),this.unpack_array(e);case 222:return e=this.unpack_uint16(),this.unpack_map(e);case 223:return e=this.unpack_uint32(),this.unpack_map(e)}}unpack_uint8(){let e=255&this.dataView[this.index];return this.index++,e}unpack_uint16(){let e=this.read(2),t=(255&e[0])*256+(255&e[1]);return this.index+=2,t}unpack_uint32(){let e=this.read(4),t=((256*e[0]+e[1])*256+e[2])*256+e[3];return this.index+=4,t}unpack_uint64(){let e=this.read(8),t=((((((256*e[0]+e[1])*256+e[2])*256+e[3])*256+e[4])*256+e[5])*256+e[6])*256+e[7];return this.index+=8,t}unpack_int8(){let e=this.unpack_uint8();return e<128?e:e-256}unpack_int16(){let e=this.unpack_uint16();return e<32768?e:e-65536}unpack_int32(){let e=this.unpack_uint32();return e<2147483648?e:e-4294967296}unpack_int64(){let e=this.unpack_uint64();return e<0x7fffffffffffffff?e:e-18446744073709552e3}unpack_raw(e){if(this.length<this.index+e)throw Error(`BinaryPackFailure: index is out of range ${this.index} ${e} ${this.length}`);let t=this.dataBuffer.slice(this.index,this.index+e);return this.index+=e,t}unpack_string(e){let t,n;let r=this.read(e),i=0,o="";for(;i<e;)(t=r[i])<160?(n=t,i++):(192^t)<32?(n=(31&t)<<6|63&r[i+1],i+=2):(224^t)<16?(n=(15&t)<<12|(63&r[i+1])<<6|63&r[i+2],i+=3):(n=(7&t)<<18|(63&r[i+1])<<12|(63&r[i+2])<<6|63&r[i+3],i+=4),o+=String.fromCodePoint(n);return this.index+=e,o}unpack_array(e){let t=Array(e);for(let n=0;n<e;n++)t[n]=this.unpack();return t}unpack_map(e){let t={};for(let n=0;n<e;n++)t[this.unpack()]=this.unpack();return t}unpack_float(){let e=this.unpack_uint32();return(0==e>>31?1:-1)*(8388607&e|8388608)*2**((e>>23&255)-127-23)}unpack_double(){let e=this.unpack_uint32(),t=this.unpack_uint32(),n=(e>>20&2047)-1023;return(0==e>>31?1:-1)*((1048575&e|1048576)*2**(n-20)+t*2**(n-52))}read(e){let t=this.index;if(t+e<=this.length)return this.dataView.subarray(t,t+e);throw Error("BinaryPackFailure: read index out of range")}constructor(e){this.index=0,this.dataBuffer=e,this.dataView=new Uint8Array(this.dataBuffer),this.length=this.dataBuffer.byteLength}}class a{getBuffer(){return this._bufferBuilder.toArrayBuffer()}pack(e){if("string"==typeof e)this.pack_string(e);else if("number"==typeof e)Math.floor(e)===e?this.pack_integer(e):this.pack_double(e);else if("boolean"==typeof e)!0===e?this._bufferBuilder.append(195):!1===e&&this._bufferBuilder.append(194);else if(void 0===e)this._bufferBuilder.append(192);else if("object"==typeof e){if(null===e)this._bufferBuilder.append(192);else{let t=e.constructor;if(e instanceof Array){let t=this.pack_array(e);if(t instanceof Promise)return t.then(()=>this._bufferBuilder.flush())}else if(e instanceof ArrayBuffer)this.pack_bin(new Uint8Array(e));else if("BYTES_PER_ELEMENT"in e)this.pack_bin(new Uint8Array(e.buffer,e.byteOffset,e.byteLength));else if(e instanceof Date)this.pack_string(e.toString());else if(e instanceof Blob)return e.arrayBuffer().then(e=>{this.pack_bin(new Uint8Array(e)),this._bufferBuilder.flush()});else if(t==Object||t.toString().startsWith("class")){let t=this.pack_object(e);if(t instanceof Promise)return t.then(()=>this._bufferBuilder.flush())}else throw Error(`Type "${t.toString()}" not yet supported`)}}else throw Error(`Type "${typeof e}" not yet supported`);this._bufferBuilder.flush()}pack_bin(e){let t=e.length;if(t<=15)this.pack_uint8(160+t);else if(t<=65535)this._bufferBuilder.append(218),this.pack_uint16(t);else if(t<=4294967295)this._bufferBuilder.append(219),this.pack_uint32(t);else throw Error("Invalid length");this._bufferBuilder.append_buffer(e)}pack_string(e){let t=this._textEncoder.encode(e),n=t.length;if(n<=15)this.pack_uint8(176+n);else if(n<=65535)this._bufferBuilder.append(216),this.pack_uint16(n);else if(n<=4294967295)this._bufferBuilder.append(217),this.pack_uint32(n);else throw Error("Invalid length");this._bufferBuilder.append_buffer(t)}pack_array(e){let t=e.length;if(t<=15)this.pack_uint8(144+t);else if(t<=65535)this._bufferBuilder.append(220),this.pack_uint16(t);else if(t<=4294967295)this._bufferBuilder.append(221),this.pack_uint32(t);else throw Error("Invalid length");let n=r=>{if(r<t){let t=this.pack(e[r]);return t instanceof Promise?t.then(()=>n(r+1)):n(r+1)}};return n(0)}pack_integer(e){if(e>=-32&&e<=127)this._bufferBuilder.append(255&e);else if(e>=0&&e<=255)this._bufferBuilder.append(204),this.pack_uint8(e);else if(e>=-128&&e<=127)this._bufferBuilder.append(208),this.pack_int8(e);else if(e>=0&&e<=65535)this._bufferBuilder.append(205),this.pack_uint16(e);else if(e>=-32768&&e<=32767)this._bufferBuilder.append(209),this.pack_int16(e);else if(e>=0&&e<=4294967295)this._bufferBuilder.append(206),this.pack_uint32(e);else if(e>=-2147483648&&e<=2147483647)this._bufferBuilder.append(210),this.pack_int32(e);else if(e>=-0x8000000000000000&&e<=0x7fffffffffffffff)this._bufferBuilder.append(211),this.pack_int64(e);else if(e>=0&&e<=18446744073709552e3)this._bufferBuilder.append(207),this.pack_uint64(e);else throw Error("Invalid integer")}pack_double(e){let t=0;e<0&&(t=1,e=-e);let n=Math.floor(Math.log(e)/Math.LN2),r=Math.floor((e/2**n-1)*4503599627370496),i=t<<31|n+1023<<20|r/4294967296&1048575;this._bufferBuilder.append(203),this.pack_int32(i),this.pack_int32(r%4294967296)}pack_object(e){let t=Object.keys(e),n=t.length;if(n<=15)this.pack_uint8(128+n);else if(n<=65535)this._bufferBuilder.append(222),this.pack_uint16(n);else if(n<=4294967295)this._bufferBuilder.append(223),this.pack_uint32(n);else throw Error("Invalid length");let r=n=>{if(n<t.length){let i=t[n];if(e.hasOwnProperty(i)){this.pack(i);let t=this.pack(e[i]);if(t instanceof Promise)return t.then(()=>r(n+1))}return r(n+1)}};return r(0)}pack_uint8(e){this._bufferBuilder.append(e)}pack_uint16(e){this._bufferBuilder.append(e>>8),this._bufferBuilder.append(255&e)}pack_uint32(e){let t=4294967295&e;this._bufferBuilder.append((4278190080&t)>>>24),this._bufferBuilder.append((16711680&t)>>>16),this._bufferBuilder.append((65280&t)>>>8),this._bufferBuilder.append(255&t)}pack_uint64(e){let t=e/4294967296,n=e%4294967296;this._bufferBuilder.append((4278190080&t)>>>24),this._bufferBuilder.append((16711680&t)>>>16),this._bufferBuilder.append((65280&t)>>>8),this._bufferBuilder.append(255&t),this._bufferBuilder.append((4278190080&n)>>>24),this._bufferBuilder.append((16711680&n)>>>16),this._bufferBuilder.append((65280&n)>>>8),this._bufferBuilder.append(255&n)}pack_int8(e){this._bufferBuilder.append(255&e)}pack_int16(e){this._bufferBuilder.append((65280&e)>>8),this._bufferBuilder.append(255&e)}pack_int32(e){this._bufferBuilder.append(e>>>24&255),this._bufferBuilder.append((16711680&e)>>>16),this._bufferBuilder.append((65280&e)>>>8),this._bufferBuilder.append(255&e)}pack_int64(e){let t=Math.floor(e/4294967296),n=e%4294967296;this._bufferBuilder.append((4278190080&t)>>>24),this._bufferBuilder.append((16711680&t)>>>16),this._bufferBuilder.append((65280&t)>>>8),this._bufferBuilder.append(255&t),this._bufferBuilder.append((4278190080&n)>>>24),this._bufferBuilder.append((16711680&n)>>>16),this._bufferBuilder.append((65280&n)>>>8),this._bufferBuilder.append(255&n)}constructor(){this._bufferBuilder=new r,this._textEncoder=new TextEncoder}}let c=!0,l=!0;function p(e,t,n){let r=e.match(t);return r&&r.length>=n&&parseInt(r[n],10)}function d(e,t,n){if(!e.RTCPeerConnection)return;let r=e.RTCPeerConnection.prototype,i=r.addEventListener;r.addEventListener=function(e,r){if(e!==t)return i.apply(this,arguments);let o=e=>{let t=n(e);t&&(r.handleEvent?r.handleEvent(t):r(t))};return this._eventMap=this._eventMap||{},this._eventMap[t]||(this._eventMap[t]=new Map),this._eventMap[t].set(r,o),i.apply(this,[e,o])};let o=r.removeEventListener;r.removeEventListener=function(e,n){if(e!==t||!this._eventMap||!this._eventMap[t]||!this._eventMap[t].has(n))return o.apply(this,arguments);let r=this._eventMap[t].get(n);return this._eventMap[t].delete(n),0===this._eventMap[t].size&&delete this._eventMap[t],0===Object.keys(this._eventMap).length&&delete this._eventMap,o.apply(this,[e,r])},Object.defineProperty(r,"on"+t,{get(){return this["_on"+t]},set(e){this["_on"+t]&&(this.removeEventListener(t,this["_on"+t]),delete this["_on"+t]),e&&this.addEventListener(t,this["_on"+t]=e)},enumerable:!0,configurable:!0})}function h(e){return"boolean"!=typeof e?Error("Argument type: "+typeof e+". Please use a boolean."):(c=e,e?"adapter.js logging disabled":"adapter.js logging enabled")}function u(e){return"boolean"!=typeof e?Error("Argument type: "+typeof e+". Please use a boolean."):(l=!e,"adapter.js deprecation warnings "+(e?"disabled":"enabled"))}function f(){"object"!=typeof window||c||"undefined"==typeof console||"function"!=typeof console.log||console.log.apply(console,arguments)}function m(e,t){l&&console.warn(e+" is deprecated, please use "+t+" instead.")}function g(e){return"[object Object]"===Object.prototype.toString.call(e)}function y(e,t,n){let r=n?"outbound-rtp":"inbound-rtp",i=new Map;if(null===t)return i;let o=[];return e.forEach(e=>{"track"===e.type&&e.trackIdentifier===t.id&&o.push(e)}),o.forEach(t=>{e.forEach(n=>{n.type===r&&n.trackId===t.id&&function e(t,n,r){!n||r.has(n.id)||(r.set(n.id,n),Object.keys(n).forEach(i=>{i.endsWith("Id")?e(t,t.get(n[i]),r):i.endsWith("Ids")&&n[i].forEach(n=>{e(t,t.get(n),r)})}))}(e,n,i)})}),i}var _,C,v,b,k,S,T,R,w,P,E,D,x,I,M,O,j={};function L(e,t){let n=e&&e.navigator;if(!n.mediaDevices)return;let r=function(e){if("object"!=typeof e||e.mandatory||e.optional)return e;let t={};return Object.keys(e).forEach(n=>{if("require"===n||"advanced"===n||"mediaSource"===n)return;let r="object"==typeof e[n]?e[n]:{ideal:e[n]};void 0!==r.exact&&"number"==typeof r.exact&&(r.min=r.max=r.exact);let i=function(e,t){return e?e+t.charAt(0).toUpperCase()+t.slice(1):"deviceId"===t?"sourceId":t};if(void 0!==r.ideal){t.optional=t.optional||[];let e={};"number"==typeof r.ideal?(e[i("min",n)]=r.ideal,t.optional.push(e),(e={})[i("max",n)]=r.ideal):e[i("",n)]=r.ideal,t.optional.push(e)}void 0!==r.exact&&"number"!=typeof r.exact?(t.mandatory=t.mandatory||{},t.mandatory[i("",n)]=r.exact):["min","max"].forEach(e=>{void 0!==r[e]&&(t.mandatory=t.mandatory||{},t.mandatory[i(e,n)]=r[e])})}),e.advanced&&(t.optional=(t.optional||[]).concat(e.advanced)),t},i=function(e,i){if(t.version>=61)return i(e);if((e=JSON.parse(JSON.stringify(e)))&&"object"==typeof e.audio){let t=function(e,t,n){t in e&&!(n in e)&&(e[n]=e[t],delete e[t])};t((e=JSON.parse(JSON.stringify(e))).audio,"autoGainControl","googAutoGainControl"),t(e.audio,"noiseSuppression","googNoiseSuppression"),e.audio=r(e.audio)}if(e&&"object"==typeof e.video){let o=e.video.facingMode;o=o&&("object"==typeof o?o:{ideal:o});let s=t.version<66;if(o&&("user"===o.exact||"environment"===o.exact||"user"===o.ideal||"environment"===o.ideal)&&!(n.mediaDevices.getSupportedConstraints&&n.mediaDevices.getSupportedConstraints().facingMode&&!s)){let t;if(delete e.video.facingMode,"environment"===o.exact||"environment"===o.ideal?t=["back","rear"]:("user"===o.exact||"user"===o.ideal)&&(t=["front"]),t)return n.mediaDevices.enumerateDevices().then(n=>{let s=(n=n.filter(e=>"videoinput"===e.kind)).find(e=>t.some(t=>e.label.toLowerCase().includes(t)));return!s&&n.length&&t.includes("back")&&(s=n[n.length-1]),s&&(e.video.deviceId=o.exact?{exact:s.deviceId}:{ideal:s.deviceId}),e.video=r(e.video),f("chrome: "+JSON.stringify(e)),i(e)})}e.video=r(e.video)}return f("chrome: "+JSON.stringify(e)),i(e)},o=function(e){return t.version>=64?e:{name:({PermissionDeniedError:"NotAllowedError",PermissionDismissedError:"NotAllowedError",InvalidStateError:"NotAllowedError",DevicesNotFoundError:"NotFoundError",ConstraintNotSatisfiedError:"OverconstrainedError",TrackStartError:"NotReadableError",MediaDeviceFailedDueToShutdown:"NotAllowedError",MediaDeviceKillSwitchOn:"NotAllowedError",TabCaptureError:"AbortError",ScreenCaptureError:"AbortError",DeviceCaptureError:"AbortError"})[e.name]||e.name,message:e.message,constraint:e.constraint||e.constraintName,toString(){return this.name+(this.message&&": ")+this.message}}};if(n.getUserMedia=(function(e,t,r){i(e,e=>{n.webkitGetUserMedia(e,t,e=>{r&&r(o(e))})})}).bind(n),n.mediaDevices.getUserMedia){let e=n.mediaDevices.getUserMedia.bind(n.mediaDevices);n.mediaDevices.getUserMedia=function(t){return i(t,t=>e(t).then(e=>{if(t.audio&&!e.getAudioTracks().length||t.video&&!e.getVideoTracks().length)throw e.getTracks().forEach(e=>{e.stop()}),new DOMException("","NotFoundError");return e},e=>Promise.reject(o(e))))}}}function A(e,t){if((!e.navigator.mediaDevices||!("getDisplayMedia"in e.navigator.mediaDevices))&&e.navigator.mediaDevices){if("function"!=typeof t){console.error("shimGetDisplayMedia: getSourceId argument is not a function");return}e.navigator.mediaDevices.getDisplayMedia=function(n){return t(n).then(t=>{let r=n.video&&n.video.width,i=n.video&&n.video.height,o=n.video&&n.video.frameRate;return n.video={mandatory:{chromeMediaSource:"desktop",chromeMediaSourceId:t,maxFrameRate:o||3}},r&&(n.video.mandatory.maxWidth=r),i&&(n.video.mandatory.maxHeight=i),e.navigator.mediaDevices.getUserMedia(n)})}}}function B(e){e.MediaStream=e.MediaStream||e.webkitMediaStream}function F(e){if("object"!=typeof e||!e.RTCPeerConnection||"ontrack"in e.RTCPeerConnection.prototype)d(e,"track",e=>(e.transceiver||Object.defineProperty(e,"transceiver",{value:{receiver:e.receiver}}),e));else{Object.defineProperty(e.RTCPeerConnection.prototype,"ontrack",{get(){return this._ontrack},set(e){this._ontrack&&this.removeEventListener("track",this._ontrack),this.addEventListener("track",this._ontrack=e)},enumerable:!0,configurable:!0});let t=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(){return this._ontrackpoly||(this._ontrackpoly=t=>{t.stream.addEventListener("addtrack",n=>{let r;r=e.RTCPeerConnection.prototype.getReceivers?this.getReceivers().find(e=>e.track&&e.track.id===n.track.id):{track:n.track};let i=new Event("track");i.track=n.track,i.receiver=r,i.transceiver={receiver:r},i.streams=[t.stream],this.dispatchEvent(i)}),t.stream.getTracks().forEach(n=>{let r;r=e.RTCPeerConnection.prototype.getReceivers?this.getReceivers().find(e=>e.track&&e.track.id===n.id):{track:n};let i=new Event("track");i.track=n,i.receiver=r,i.transceiver={receiver:r},i.streams=[t.stream],this.dispatchEvent(i)})},this.addEventListener("addstream",this._ontrackpoly)),t.apply(this,arguments)}}}function U(e){if("object"==typeof e&&e.RTCPeerConnection&&!("getSenders"in e.RTCPeerConnection.prototype)&&"createDTMFSender"in e.RTCPeerConnection.prototype){let t=function(e,t){return{track:t,get dtmf(){return void 0===this._dtmf&&("audio"===t.kind?this._dtmf=e.createDTMFSender(t):this._dtmf=null),this._dtmf},_pc:e}};if(!e.RTCPeerConnection.prototype.getSenders){e.RTCPeerConnection.prototype.getSenders=function(){return this._senders=this._senders||[],this._senders.slice()};let n=e.RTCPeerConnection.prototype.addTrack;e.RTCPeerConnection.prototype.addTrack=function(e,r){let i=n.apply(this,arguments);return i||(i=t(this,e),this._senders.push(i)),i};let r=e.RTCPeerConnection.prototype.removeTrack;e.RTCPeerConnection.prototype.removeTrack=function(e){r.apply(this,arguments);let t=this._senders.indexOf(e);-1!==t&&this._senders.splice(t,1)}}let n=e.RTCPeerConnection.prototype.addStream;e.RTCPeerConnection.prototype.addStream=function(e){this._senders=this._senders||[],n.apply(this,[e]),e.getTracks().forEach(e=>{this._senders.push(t(this,e))})};let r=e.RTCPeerConnection.prototype.removeStream;e.RTCPeerConnection.prototype.removeStream=function(e){this._senders=this._senders||[],r.apply(this,[e]),e.getTracks().forEach(e=>{let t=this._senders.find(t=>t.track===e);t&&this._senders.splice(this._senders.indexOf(t),1)})}}else if("object"==typeof e&&e.RTCPeerConnection&&"getSenders"in e.RTCPeerConnection.prototype&&"createDTMFSender"in e.RTCPeerConnection.prototype&&e.RTCRtpSender&&!("dtmf"in e.RTCRtpSender.prototype)){let t=e.RTCPeerConnection.prototype.getSenders;e.RTCPeerConnection.prototype.getSenders=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e},Object.defineProperty(e.RTCRtpSender.prototype,"dtmf",{get(){return void 0===this._dtmf&&("audio"===this.track.kind?this._dtmf=this._pc.createDTMFSender(this.track):this._dtmf=null),this._dtmf}})}}function z(e){if(!e.RTCPeerConnection)return;let t=e.RTCPeerConnection.prototype.getStats;e.RTCPeerConnection.prototype.getStats=function(){let[e,n,r]=arguments;if(arguments.length>0&&"function"==typeof e)return t.apply(this,arguments);if(0===t.length&&(0==arguments.length||"function"!=typeof e))return t.apply(this,[]);let i=function(e){let t={};return e.result().forEach(e=>{let n={id:e.id,timestamp:e.timestamp,type:{localcandidate:"local-candidate",remotecandidate:"remote-candidate"}[e.type]||e.type};e.names().forEach(t=>{n[t]=e.stat(t)}),t[n.id]=n}),t},o=function(e){return new Map(Object.keys(e).map(t=>[t,e[t]]))};return arguments.length>=2?t.apply(this,[function(e){n(o(i(e)))},e]):new Promise((e,n)=>{t.apply(this,[function(t){e(o(i(t)))},n])}).then(n,r)}}function N(e){if(!("object"==typeof e&&e.RTCPeerConnection&&e.RTCRtpSender&&e.RTCRtpReceiver))return;if(!("getStats"in e.RTCRtpSender.prototype)){let t=e.RTCPeerConnection.prototype.getSenders;t&&(e.RTCPeerConnection.prototype.getSenders=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e});let n=e.RTCPeerConnection.prototype.addTrack;n&&(e.RTCPeerConnection.prototype.addTrack=function(){let e=n.apply(this,arguments);return e._pc=this,e}),e.RTCRtpSender.prototype.getStats=function(){let e=this;return this._pc.getStats().then(t=>y(t,e.track,!0))}}if(!("getStats"in e.RTCRtpReceiver.prototype)){let t=e.RTCPeerConnection.prototype.getReceivers;t&&(e.RTCPeerConnection.prototype.getReceivers=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e}),d(e,"track",e=>(e.receiver._pc=e.srcElement,e)),e.RTCRtpReceiver.prototype.getStats=function(){let e=this;return this._pc.getStats().then(t=>y(t,e.track,!1))}}if(!("getStats"in e.RTCRtpSender.prototype&&"getStats"in e.RTCRtpReceiver.prototype))return;let t=e.RTCPeerConnection.prototype.getStats;e.RTCPeerConnection.prototype.getStats=function(){if(arguments.length>0&&arguments[0]instanceof e.MediaStreamTrack){let e,t,n;let r=arguments[0];return(this.getSenders().forEach(t=>{t.track===r&&(e?n=!0:e=t)}),this.getReceivers().forEach(e=>(e.track===r&&(t?n=!0:t=e),e.track===r)),n||e&&t)?Promise.reject(new DOMException("There are more than one sender or receiver for the track.","InvalidAccessError")):e?e.getStats():t?t.getStats():Promise.reject(new DOMException("There is no sender or receiver for the track.","InvalidAccessError"))}return t.apply(this,arguments)}}function $(e){e.RTCPeerConnection.prototype.getLocalStreams=function(){return this._shimmedLocalStreams=this._shimmedLocalStreams||{},Object.keys(this._shimmedLocalStreams).map(e=>this._shimmedLocalStreams[e][0])};let t=e.RTCPeerConnection.prototype.addTrack;e.RTCPeerConnection.prototype.addTrack=function(e,n){if(!n)return t.apply(this,arguments);this._shimmedLocalStreams=this._shimmedLocalStreams||{};let r=t.apply(this,arguments);return this._shimmedLocalStreams[n.id]?-1===this._shimmedLocalStreams[n.id].indexOf(r)&&this._shimmedLocalStreams[n.id].push(r):this._shimmedLocalStreams[n.id]=[n,r],r};let n=e.RTCPeerConnection.prototype.addStream;e.RTCPeerConnection.prototype.addStream=function(e){this._shimmedLocalStreams=this._shimmedLocalStreams||{},e.getTracks().forEach(e=>{if(this.getSenders().find(t=>t.track===e))throw new DOMException("Track already exists.","InvalidAccessError")});let t=this.getSenders();n.apply(this,arguments);let r=this.getSenders().filter(e=>-1===t.indexOf(e));this._shimmedLocalStreams[e.id]=[e].concat(r)};let r=e.RTCPeerConnection.prototype.removeStream;e.RTCPeerConnection.prototype.removeStream=function(e){return this._shimmedLocalStreams=this._shimmedLocalStreams||{},delete this._shimmedLocalStreams[e.id],r.apply(this,arguments)};let i=e.RTCPeerConnection.prototype.removeTrack;e.RTCPeerConnection.prototype.removeTrack=function(e){return this._shimmedLocalStreams=this._shimmedLocalStreams||{},e&&Object.keys(this._shimmedLocalStreams).forEach(t=>{let n=this._shimmedLocalStreams[t].indexOf(e);-1!==n&&this._shimmedLocalStreams[t].splice(n,1),1===this._shimmedLocalStreams[t].length&&delete this._shimmedLocalStreams[t]}),i.apply(this,arguments)}}function J(e,t){if(!e.RTCPeerConnection)return;if(e.RTCPeerConnection.prototype.addTrack&&t.version>=65)return $(e);let n=e.RTCPeerConnection.prototype.getLocalStreams;e.RTCPeerConnection.prototype.getLocalStreams=function(){let e=n.apply(this);return this._reverseStreams=this._reverseStreams||{},e.map(e=>this._reverseStreams[e.id])};let r=e.RTCPeerConnection.prototype.addStream;e.RTCPeerConnection.prototype.addStream=function(t){if(this._streams=this._streams||{},this._reverseStreams=this._reverseStreams||{},t.getTracks().forEach(e=>{if(this.getSenders().find(t=>t.track===e))throw new DOMException("Track already exists.","InvalidAccessError")}),!this._reverseStreams[t.id]){let n=new e.MediaStream(t.getTracks());this._streams[t.id]=n,this._reverseStreams[n.id]=t,t=n}r.apply(this,[t])};let i=e.RTCPeerConnection.prototype.removeStream;function o(e,t){let n=t.sdp;return Object.keys(e._reverseStreams||[]).forEach(t=>{let r=e._reverseStreams[t],i=e._streams[r.id];n=n.replace(RegExp(i.id,"g"),r.id)}),new RTCSessionDescription({type:t.type,sdp:n})}e.RTCPeerConnection.prototype.removeStream=function(e){this._streams=this._streams||{},this._reverseStreams=this._reverseStreams||{},i.apply(this,[this._streams[e.id]||e]),delete this._reverseStreams[this._streams[e.id]?this._streams[e.id].id:e.id],delete this._streams[e.id]},e.RTCPeerConnection.prototype.addTrack=function(t,n){if("closed"===this.signalingState)throw new DOMException("The RTCPeerConnection's signalingState is 'closed'.","InvalidStateError");let r=[].slice.call(arguments,1);if(1!==r.length||!r[0].getTracks().find(e=>e===t))throw new DOMException("The adapter.js addTrack polyfill only supports a single  stream which is associated with the specified track.","NotSupportedError");if(this.getSenders().find(e=>e.track===t))throw new DOMException("Track already exists.","InvalidAccessError");this._streams=this._streams||{},this._reverseStreams=this._reverseStreams||{};let i=this._streams[n.id];if(i)i.addTrack(t),Promise.resolve().then(()=>{this.dispatchEvent(new Event("negotiationneeded"))});else{let r=new e.MediaStream([t]);this._streams[n.id]=r,this._reverseStreams[r.id]=n,this.addStream(r)}return this.getSenders().find(e=>e.track===t)},["createOffer","createAnswer"].forEach(function(t){let n=e.RTCPeerConnection.prototype[t];e.RTCPeerConnection.prototype[t]=({[t](){let e=arguments,t=arguments.length&&"function"==typeof arguments[0];return t?n.apply(this,[t=>{let n=o(this,t);e[0].apply(null,[n])},t=>{e[1]&&e[1].apply(null,t)},arguments[2]]):n.apply(this,arguments).then(e=>o(this,e))}})[t]});let s=e.RTCPeerConnection.prototype.setLocalDescription;e.RTCPeerConnection.prototype.setLocalDescription=function(){var e,t;let n;return arguments.length&&arguments[0].type&&(arguments[0]=(e=this,t=arguments[0],n=t.sdp,Object.keys(e._reverseStreams||[]).forEach(t=>{let r=e._reverseStreams[t],i=e._streams[r.id];n=n.replace(RegExp(r.id,"g"),i.id)}),new RTCSessionDescription({type:t.type,sdp:n}))),s.apply(this,arguments)};let a=Object.getOwnPropertyDescriptor(e.RTCPeerConnection.prototype,"localDescription");Object.defineProperty(e.RTCPeerConnection.prototype,"localDescription",{get(){let e=a.get.apply(this);return""===e.type?e:o(this,e)}}),e.RTCPeerConnection.prototype.removeTrack=function(e){let t;if("closed"===this.signalingState)throw new DOMException("The RTCPeerConnection's signalingState is 'closed'.","InvalidStateError");if(!e._pc)throw new DOMException("Argument 1 of RTCPeerConnection.removeTrack does not implement interface RTCRtpSender.","TypeError");if(e._pc!==this)throw new DOMException("Sender was not created by this connection.","InvalidAccessError");this._streams=this._streams||{},Object.keys(this._streams).forEach(n=>{this._streams[n].getTracks().find(t=>e.track===t)&&(t=this._streams[n])}),t&&(1===t.getTracks().length?this.removeStream(this._reverseStreams[t.id]):t.removeTrack(e.track),this.dispatchEvent(new Event("negotiationneeded")))}}function V(e,t){!e.RTCPeerConnection&&e.webkitRTCPeerConnection&&(e.RTCPeerConnection=e.webkitRTCPeerConnection),e.RTCPeerConnection&&t.version<53&&["setLocalDescription","setRemoteDescription","addIceCandidate"].forEach(function(t){let n=e.RTCPeerConnection.prototype[t];e.RTCPeerConnection.prototype[t]=({[t](){return arguments[0]=new("addIceCandidate"===t?e.RTCIceCandidate:e.RTCSessionDescription)(arguments[0]),n.apply(this,arguments)}})[t]})}function G(e,t){d(e,"negotiationneeded",e=>{let n=e.target;if(!(t.version<72)&&(!n.getConfiguration||"plan-b"!==n.getConfiguration().sdpSemantics)||"stable"===n.signalingState)return e})}e(j,"shimMediaStream",()=>B),e(j,"shimOnTrack",()=>F),e(j,"shimGetSendersWithDtmf",()=>U),e(j,"shimGetStats",()=>z),e(j,"shimSenderReceiverGetStats",()=>N),e(j,"shimAddTrackRemoveTrackWithNative",()=>$),e(j,"shimAddTrackRemoveTrack",()=>J),e(j,"shimPeerConnection",()=>V),e(j,"fixNegotiationNeeded",()=>G),e(j,"shimGetUserMedia",()=>L),e(j,"shimGetDisplayMedia",()=>A);var W={};function H(e,t){let n=e&&e.navigator,r=e&&e.MediaStreamTrack;if(n.getUserMedia=function(e,t,r){m("navigator.getUserMedia","navigator.mediaDevices.getUserMedia"),n.mediaDevices.getUserMedia(e).then(t,r)},!(t.version>55&&"autoGainControl"in n.mediaDevices.getSupportedConstraints())){let e=function(e,t,n){t in e&&!(n in e)&&(e[n]=e[t],delete e[t])},t=n.mediaDevices.getUserMedia.bind(n.mediaDevices);if(n.mediaDevices.getUserMedia=function(n){return"object"==typeof n&&"object"==typeof n.audio&&(e((n=JSON.parse(JSON.stringify(n))).audio,"autoGainControl","mozAutoGainControl"),e(n.audio,"noiseSuppression","mozNoiseSuppression")),t(n)},r&&r.prototype.getSettings){let t=r.prototype.getSettings;r.prototype.getSettings=function(){let n=t.apply(this,arguments);return e(n,"mozAutoGainControl","autoGainControl"),e(n,"mozNoiseSuppression","noiseSuppression"),n}}if(r&&r.prototype.applyConstraints){let t=r.prototype.applyConstraints;r.prototype.applyConstraints=function(n){return"audio"===this.kind&&"object"==typeof n&&(e(n=JSON.parse(JSON.stringify(n)),"autoGainControl","mozAutoGainControl"),e(n,"noiseSuppression","mozNoiseSuppression")),t.apply(this,[n])}}}}function Y(e,t){e.navigator.mediaDevices&&"getDisplayMedia"in e.navigator.mediaDevices||!e.navigator.mediaDevices||(e.navigator.mediaDevices.getDisplayMedia=function(n){if(!(n&&n.video)){let e=new DOMException("getDisplayMedia without video constraints is undefined");return e.name="NotFoundError",e.code=8,Promise.reject(e)}return!0===n.video?n.video={mediaSource:t}:n.video.mediaSource=t,e.navigator.mediaDevices.getUserMedia(n)})}function K(e){"object"==typeof e&&e.RTCTrackEvent&&"receiver"in e.RTCTrackEvent.prototype&&!("transceiver"in e.RTCTrackEvent.prototype)&&Object.defineProperty(e.RTCTrackEvent.prototype,"transceiver",{get(){return{receiver:this.receiver}}})}function X(e,t){if("object"!=typeof e||!(e.RTCPeerConnection||e.mozRTCPeerConnection))return;!e.RTCPeerConnection&&e.mozRTCPeerConnection&&(e.RTCPeerConnection=e.mozRTCPeerConnection),t.version<53&&["setLocalDescription","setRemoteDescription","addIceCandidate"].forEach(function(t){let n=e.RTCPeerConnection.prototype[t];e.RTCPeerConnection.prototype[t]=({[t](){return arguments[0]=new("addIceCandidate"===t?e.RTCIceCandidate:e.RTCSessionDescription)(arguments[0]),n.apply(this,arguments)}})[t]});let n={inboundrtp:"inbound-rtp",outboundrtp:"outbound-rtp",candidatepair:"candidate-pair",localcandidate:"local-candidate",remotecandidate:"remote-candidate"},r=e.RTCPeerConnection.prototype.getStats;e.RTCPeerConnection.prototype.getStats=function(){let[e,i,o]=arguments;return r.apply(this,[e||null]).then(e=>{if(t.version<53&&!i)try{e.forEach(e=>{e.type=n[e.type]||e.type})}catch(t){if("TypeError"!==t.name)throw t;e.forEach((t,r)=>{e.set(r,Object.assign({},t,{type:n[t.type]||t.type}))})}return e}).then(i,o)}}function q(e){if(!("object"==typeof e&&e.RTCPeerConnection&&e.RTCRtpSender)||e.RTCRtpSender&&"getStats"in e.RTCRtpSender.prototype)return;let t=e.RTCPeerConnection.prototype.getSenders;t&&(e.RTCPeerConnection.prototype.getSenders=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e});let n=e.RTCPeerConnection.prototype.addTrack;n&&(e.RTCPeerConnection.prototype.addTrack=function(){let e=n.apply(this,arguments);return e._pc=this,e}),e.RTCRtpSender.prototype.getStats=function(){return this.track?this._pc.getStats(this.track):Promise.resolve(new Map)}}function Q(e){if(!("object"==typeof e&&e.RTCPeerConnection&&e.RTCRtpSender)||e.RTCRtpSender&&"getStats"in e.RTCRtpReceiver.prototype)return;let t=e.RTCPeerConnection.prototype.getReceivers;t&&(e.RTCPeerConnection.prototype.getReceivers=function(){let e=t.apply(this,[]);return e.forEach(e=>e._pc=this),e}),d(e,"track",e=>(e.receiver._pc=e.srcElement,e)),e.RTCRtpReceiver.prototype.getStats=function(){return this._pc.getStats(this.track)}}function Z(e){!e.RTCPeerConnection||"removeStream"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.removeStream=function(e){m("removeStream","removeTrack"),this.getSenders().forEach(t=>{t.track&&e.getTracks().includes(t.track)&&this.removeTrack(t)})})}function ee(e){e.DataChannel&&!e.RTCDataChannel&&(e.RTCDataChannel=e.DataChannel)}function et(e){if(!("object"==typeof e&&e.RTCPeerConnection))return;let t=e.RTCPeerConnection.prototype.addTransceiver;t&&(e.RTCPeerConnection.prototype.addTransceiver=function(){this.setParametersPromises=[];let e=arguments[1]&&arguments[1].sendEncodings;void 0===e&&(e=[]);let n=(e=[...e]).length>0;n&&e.forEach(e=>{if("rid"in e&&!/^[a-z0-9]{0,16}$/i.test(e.rid))throw TypeError("Invalid RID value provided.");if("scaleResolutionDownBy"in e&&!(parseFloat(e.scaleResolutionDownBy)>=1))throw RangeError("scale_resolution_down_by must be >= 1.0");if("maxFramerate"in e&&!(parseFloat(e.maxFramerate)>=0))throw RangeError("max_framerate must be >= 0.0")});let r=t.apply(this,arguments);if(n){let{sender:t}=r,n=t.getParameters();"encodings"in n&&(1!==n.encodings.length||0!==Object.keys(n.encodings[0]).length)||(n.encodings=e,t.sendEncodings=e,this.setParametersPromises.push(t.setParameters(n).then(()=>{delete t.sendEncodings}).catch(()=>{delete t.sendEncodings})))}return r})}function en(e){if(!("object"==typeof e&&e.RTCRtpSender))return;let t=e.RTCRtpSender.prototype.getParameters;t&&(e.RTCRtpSender.prototype.getParameters=function(){let e=t.apply(this,arguments);return"encodings"in e||(e.encodings=[].concat(this.sendEncodings||[{}])),e})}function er(e){if(!("object"==typeof e&&e.RTCPeerConnection))return;let t=e.RTCPeerConnection.prototype.createOffer;e.RTCPeerConnection.prototype.createOffer=function(){return this.setParametersPromises&&this.setParametersPromises.length?Promise.all(this.setParametersPromises).then(()=>t.apply(this,arguments)).finally(()=>{this.setParametersPromises=[]}):t.apply(this,arguments)}}function ei(e){if(!("object"==typeof e&&e.RTCPeerConnection))return;let t=e.RTCPeerConnection.prototype.createAnswer;e.RTCPeerConnection.prototype.createAnswer=function(){return this.setParametersPromises&&this.setParametersPromises.length?Promise.all(this.setParametersPromises).then(()=>t.apply(this,arguments)).finally(()=>{this.setParametersPromises=[]}):t.apply(this,arguments)}}e(W,"shimOnTrack",()=>K),e(W,"shimPeerConnection",()=>X),e(W,"shimSenderGetStats",()=>q),e(W,"shimReceiverGetStats",()=>Q),e(W,"shimRemoveStream",()=>Z),e(W,"shimRTCDataChannel",()=>ee),e(W,"shimAddTransceiver",()=>et),e(W,"shimGetParameters",()=>en),e(W,"shimCreateOffer",()=>er),e(W,"shimCreateAnswer",()=>ei),e(W,"shimGetUserMedia",()=>H),e(W,"shimGetDisplayMedia",()=>Y);var eo={};function es(e){if("object"==typeof e&&e.RTCPeerConnection){if("getLocalStreams"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.getLocalStreams=function(){return this._localStreams||(this._localStreams=[]),this._localStreams}),!("addStream"in e.RTCPeerConnection.prototype)){let t=e.RTCPeerConnection.prototype.addTrack;e.RTCPeerConnection.prototype.addStream=function(e){this._localStreams||(this._localStreams=[]),this._localStreams.includes(e)||this._localStreams.push(e),e.getAudioTracks().forEach(n=>t.call(this,n,e)),e.getVideoTracks().forEach(n=>t.call(this,n,e))},e.RTCPeerConnection.prototype.addTrack=function(e,...n){return n&&n.forEach(e=>{this._localStreams?this._localStreams.includes(e)||this._localStreams.push(e):this._localStreams=[e]}),t.apply(this,arguments)}}"removeStream"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.removeStream=function(e){this._localStreams||(this._localStreams=[]);let t=this._localStreams.indexOf(e);if(-1===t)return;this._localStreams.splice(t,1);let n=e.getTracks();this.getSenders().forEach(e=>{n.includes(e.track)&&this.removeTrack(e)})})}}function ea(e){if("object"==typeof e&&e.RTCPeerConnection&&("getRemoteStreams"in e.RTCPeerConnection.prototype||(e.RTCPeerConnection.prototype.getRemoteStreams=function(){return this._remoteStreams?this._remoteStreams:[]}),!("onaddstream"in e.RTCPeerConnection.prototype))){Object.defineProperty(e.RTCPeerConnection.prototype,"onaddstream",{get(){return this._onaddstream},set(e){this._onaddstream&&(this.removeEventListener("addstream",this._onaddstream),this.removeEventListener("track",this._onaddstreampoly)),this.addEventListener("addstream",this._onaddstream=e),this.addEventListener("track",this._onaddstreampoly=e=>{e.streams.forEach(e=>{if(this._remoteStreams||(this._remoteStreams=[]),this._remoteStreams.includes(e))return;this._remoteStreams.push(e);let t=new Event("addstream");t.stream=e,this.dispatchEvent(t)})})}});let t=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(){let e=this;return this._onaddstreampoly||this.addEventListener("track",this._onaddstreampoly=function(t){t.streams.forEach(t=>{if(e._remoteStreams||(e._remoteStreams=[]),e._remoteStreams.indexOf(t)>=0)return;e._remoteStreams.push(t);let n=new Event("addstream");n.stream=t,e.dispatchEvent(n)})}),t.apply(e,arguments)}}}function ec(e){if("object"!=typeof e||!e.RTCPeerConnection)return;let t=e.RTCPeerConnection.prototype,n=t.createOffer,r=t.createAnswer,i=t.setLocalDescription,o=t.setRemoteDescription,s=t.addIceCandidate;t.createOffer=function(e,t){let r=arguments.length>=2?arguments[2]:arguments[0],i=n.apply(this,[r]);return t?(i.then(e,t),Promise.resolve()):i},t.createAnswer=function(e,t){let n=arguments.length>=2?arguments[2]:arguments[0],i=r.apply(this,[n]);return t?(i.then(e,t),Promise.resolve()):i};let a=function(e,t,n){let r=i.apply(this,[e]);return n?(r.then(t,n),Promise.resolve()):r};t.setLocalDescription=a,a=function(e,t,n){let r=o.apply(this,[e]);return n?(r.then(t,n),Promise.resolve()):r},t.setRemoteDescription=a,a=function(e,t,n){let r=s.apply(this,[e]);return n?(r.then(t,n),Promise.resolve()):r},t.addIceCandidate=a}function el(e){let t=e&&e.navigator;if(t.mediaDevices&&t.mediaDevices.getUserMedia){let e=t.mediaDevices,n=e.getUserMedia.bind(e);t.mediaDevices.getUserMedia=e=>n(ep(e))}!t.getUserMedia&&t.mediaDevices&&t.mediaDevices.getUserMedia&&(t.getUserMedia=(function(e,n,r){t.mediaDevices.getUserMedia(e).then(n,r)}).bind(t))}function ep(e){return e&&void 0!==e.video?Object.assign({},e,{video:function e(t){return g(t)?Object.keys(t).reduce(function(n,r){let i=g(t[r]),o=i?e(t[r]):t[r],s=i&&!Object.keys(o).length;return void 0===o||s?n:Object.assign(n,{[r]:o})},{}):t}(e.video)}):e}function ed(e){if(!e.RTCPeerConnection)return;let t=e.RTCPeerConnection;e.RTCPeerConnection=function(e,n){if(e&&e.iceServers){let t=[];for(let n=0;n<e.iceServers.length;n++){let r=e.iceServers[n];void 0===r.urls&&r.url?(m("RTCIceServer.url","RTCIceServer.urls"),(r=JSON.parse(JSON.stringify(r))).urls=r.url,delete r.url,t.push(r)):t.push(e.iceServers[n])}e.iceServers=t}return new t(e,n)},e.RTCPeerConnection.prototype=t.prototype,"generateCertificate"in t&&Object.defineProperty(e.RTCPeerConnection,"generateCertificate",{get:()=>t.generateCertificate})}function eh(e){"object"==typeof e&&e.RTCTrackEvent&&"receiver"in e.RTCTrackEvent.prototype&&!("transceiver"in e.RTCTrackEvent.prototype)&&Object.defineProperty(e.RTCTrackEvent.prototype,"transceiver",{get(){return{receiver:this.receiver}}})}function eu(e){let t=e.RTCPeerConnection.prototype.createOffer;e.RTCPeerConnection.prototype.createOffer=function(e){if(e){void 0!==e.offerToReceiveAudio&&(e.offerToReceiveAudio=!!e.offerToReceiveAudio);let t=this.getTransceivers().find(e=>"audio"===e.receiver.track.kind);!1===e.offerToReceiveAudio&&t?"sendrecv"===t.direction?t.setDirection?t.setDirection("sendonly"):t.direction="sendonly":"recvonly"===t.direction&&(t.setDirection?t.setDirection("inactive"):t.direction="inactive"):!0!==e.offerToReceiveAudio||t||this.addTransceiver("audio",{direction:"recvonly"}),void 0!==e.offerToReceiveVideo&&(e.offerToReceiveVideo=!!e.offerToReceiveVideo);let n=this.getTransceivers().find(e=>"video"===e.receiver.track.kind);!1===e.offerToReceiveVideo&&n?"sendrecv"===n.direction?n.setDirection?n.setDirection("sendonly"):n.direction="sendonly":"recvonly"===n.direction&&(n.setDirection?n.setDirection("inactive"):n.direction="inactive"):!0!==e.offerToReceiveVideo||n||this.addTransceiver("video",{direction:"recvonly"})}return t.apply(this,arguments)}}function ef(e){"object"!=typeof e||e.AudioContext||(e.AudioContext=e.webkitAudioContext)}e(eo,"shimLocalStreamsAPI",()=>es),e(eo,"shimRemoteStreamsAPI",()=>ea),e(eo,"shimCallbacksAPI",()=>ec),e(eo,"shimGetUserMedia",()=>el),e(eo,"shimConstraints",()=>ep),e(eo,"shimRTCIceServerUrls",()=>ed),e(eo,"shimTrackEventTransceiver",()=>eh),e(eo,"shimCreateOfferLegacy",()=>eu),e(eo,"shimAudioContext",()=>ef);var em={};e(em,"shimRTCIceCandidate",()=>e_),e(em,"shimRTCIceCandidateRelayProtocol",()=>eC),e(em,"shimMaxMessageSize",()=>ev),e(em,"shimSendThrowTypeError",()=>eb),e(em,"shimConnectionState",()=>ek),e(em,"removeExtmapAllowMixed",()=>eS),e(em,"shimAddIceCandidateNullOrEmpty",()=>eT),e(em,"shimParameterlessSetLocalDescription",()=>eR);var eg={};let ey={};function e_(e){if(!e.RTCIceCandidate||e.RTCIceCandidate&&"foundation"in e.RTCIceCandidate.prototype)return;let n=e.RTCIceCandidate;e.RTCIceCandidate=function(e){if("object"==typeof e&&e.candidate&&0===e.candidate.indexOf("a=")&&((e=JSON.parse(JSON.stringify(e))).candidate=e.candidate.substring(2)),e.candidate&&e.candidate.length){let r=new n(e),i=t(eg).parseCandidate(e.candidate);for(let e in i)e in r||Object.defineProperty(r,e,{value:i[e]});return r.toJSON=function(){return{candidate:r.candidate,sdpMid:r.sdpMid,sdpMLineIndex:r.sdpMLineIndex,usernameFragment:r.usernameFragment}},r}return new n(e)},e.RTCIceCandidate.prototype=n.prototype,d(e,"icecandidate",t=>(t.candidate&&Object.defineProperty(t,"candidate",{value:new e.RTCIceCandidate(t.candidate),writable:"false"}),t))}function eC(e){!e.RTCIceCandidate||e.RTCIceCandidate&&"relayProtocol"in e.RTCIceCandidate.prototype||d(e,"icecandidate",e=>{if(e.candidate){let n=t(eg).parseCandidate(e.candidate.candidate);"relay"===n.type&&(e.candidate.relayProtocol=({0:"tls",1:"tcp",2:"udp"})[n.priority>>24])}return e})}function ev(e,n){if(!e.RTCPeerConnection)return;"sctp"in e.RTCPeerConnection.prototype||Object.defineProperty(e.RTCPeerConnection.prototype,"sctp",{get(){return void 0===this._sctp?null:this._sctp}});let r=function(e){if(!e||!e.sdp)return!1;let n=t(eg).splitSections(e.sdp);return n.shift(),n.some(e=>{let n=t(eg).parseMLine(e);return n&&"application"===n.kind&&-1!==n.protocol.indexOf("SCTP")})},i=function(e){let t=e.sdp.match(/mozilla...THIS_IS_SDPARTA-(\d+)/);if(null===t||t.length<2)return -1;let n=parseInt(t[1],10);return n!=n?-1:n},o=function(e){let t=65536;return"firefox"===n.browser&&(t=n.version<57?-1===e?16384:2147483637:n.version<60?57===n.version?65535:65536:2147483637),t},s=function(e,r){let i=65536;"firefox"===n.browser&&57===n.version&&(i=65535);let o=t(eg).matchPrefix(e.sdp,"a=max-message-size:");return o.length>0?i=parseInt(o[0].substring(19),10):"firefox"===n.browser&&-1!==r&&(i=2147483637),i},a=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(){if(this._sctp=null,"chrome"===n.browser&&n.version>=76){let{sdpSemantics:e}=this.getConfiguration();"plan-b"===e&&Object.defineProperty(this,"sctp",{get(){return void 0===this._sctp?null:this._sctp},enumerable:!0,configurable:!0})}if(r(arguments[0])){let e;let t=i(arguments[0]),n=o(t),r=s(arguments[0],t);e=0===n&&0===r?Number.POSITIVE_INFINITY:0===n||0===r?Math.max(n,r):Math.min(n,r);let a={};Object.defineProperty(a,"maxMessageSize",{get:()=>e}),this._sctp=a}return a.apply(this,arguments)}}function eb(e){if(!(e.RTCPeerConnection&&"createDataChannel"in e.RTCPeerConnection.prototype))return;function t(e,t){let n=e.send;e.send=function(){let r=arguments[0],i=r.length||r.size||r.byteLength;if("open"===e.readyState&&t.sctp&&i>t.sctp.maxMessageSize)throw TypeError("Message too large (can send a maximum of "+t.sctp.maxMessageSize+" bytes)");return n.apply(e,arguments)}}let n=e.RTCPeerConnection.prototype.createDataChannel;e.RTCPeerConnection.prototype.createDataChannel=function(){let e=n.apply(this,arguments);return t(e,this),e},d(e,"datachannel",e=>(t(e.channel,e.target),e))}function ek(e){if(!e.RTCPeerConnection||"connectionState"in e.RTCPeerConnection.prototype)return;let t=e.RTCPeerConnection.prototype;Object.defineProperty(t,"connectionState",{get(){return({completed:"connected",checking:"connecting"})[this.iceConnectionState]||this.iceConnectionState},enumerable:!0,configurable:!0}),Object.defineProperty(t,"onconnectionstatechange",{get(){return this._onconnectionstatechange||null},set(e){this._onconnectionstatechange&&(this.removeEventListener("connectionstatechange",this._onconnectionstatechange),delete this._onconnectionstatechange),e&&this.addEventListener("connectionstatechange",this._onconnectionstatechange=e)},enumerable:!0,configurable:!0}),["setLocalDescription","setRemoteDescription"].forEach(e=>{let n=t[e];t[e]=function(){return this._connectionstatechangepoly||(this._connectionstatechangepoly=e=>{let t=e.target;if(t._lastConnectionState!==t.connectionState){t._lastConnectionState=t.connectionState;let n=new Event("connectionstatechange",e);t.dispatchEvent(n)}return e},this.addEventListener("iceconnectionstatechange",this._connectionstatechangepoly)),n.apply(this,arguments)}})}function eS(e,t){if(!e.RTCPeerConnection||"chrome"===t.browser&&t.version>=71||"safari"===t.browser&&t.version>=605)return;let n=e.RTCPeerConnection.prototype.setRemoteDescription;e.RTCPeerConnection.prototype.setRemoteDescription=function(t){if(t&&t.sdp&&-1!==t.sdp.indexOf("\na=extmap-allow-mixed")){let n=t.sdp.split("\n").filter(e=>"a=extmap-allow-mixed"!==e.trim()).join("\n");e.RTCSessionDescription&&t instanceof e.RTCSessionDescription?arguments[0]=new e.RTCSessionDescription({type:t.type,sdp:n}):t.sdp=n}return n.apply(this,arguments)}}function eT(e,t){if(!(e.RTCPeerConnection&&e.RTCPeerConnection.prototype))return;let n=e.RTCPeerConnection.prototype.addIceCandidate;n&&0!==n.length&&(e.RTCPeerConnection.prototype.addIceCandidate=function(){return arguments[0]?("chrome"===t.browser&&t.version<78||"firefox"===t.browser&&t.version<68||"safari"===t.browser)&&arguments[0]&&""===arguments[0].candidate?Promise.resolve():n.apply(this,arguments):(arguments[1]&&arguments[1].apply(null),Promise.resolve())})}function eR(e,t){if(!(e.RTCPeerConnection&&e.RTCPeerConnection.prototype))return;let n=e.RTCPeerConnection.prototype.setLocalDescription;n&&0!==n.length&&(e.RTCPeerConnection.prototype.setLocalDescription=function(){let e=arguments[0]||{};if("object"!=typeof e||e.type&&e.sdp)return n.apply(this,arguments);if(!(e={type:e.type,sdp:e.sdp}).type)switch(this.signalingState){case"stable":case"have-local-offer":case"have-remote-pranswer":e.type="offer";break;default:e.type="answer"}return e.sdp||"offer"!==e.type&&"answer"!==e.type?n.apply(this,[e]):("offer"===e.type?this.createOffer:this.createAnswer).apply(this).then(e=>n.apply(this,[e]))})}ey.generateIdentifier=function(){return Math.random().toString(36).substring(2,12)},ey.localCName=ey.generateIdentifier(),ey.splitLines=function(e){return e.trim().split("\n").map(e=>e.trim())},ey.splitSections=function(e){return e.split("\nm=").map((e,t)=>(t>0?"m="+e:e).trim()+"\r\n")},ey.getDescription=function(e){let t=ey.splitSections(e);return t&&t[0]},ey.getMediaSections=function(e){let t=ey.splitSections(e);return t.shift(),t},ey.matchPrefix=function(e,t){return ey.splitLines(e).filter(e=>0===e.indexOf(t))},ey.parseCandidate=function(e){let t;let n={foundation:(t=0===e.indexOf("a=candidate:")?e.substring(12).split(" "):e.substring(10).split(" "))[0],component:{1:"rtp",2:"rtcp"}[t[1]]||t[1],protocol:t[2].toLowerCase(),priority:parseInt(t[3],10),ip:t[4],address:t[4],port:parseInt(t[5],10),type:t[7]};for(let e=8;e<t.length;e+=2)switch(t[e]){case"raddr":n.relatedAddress=t[e+1];break;case"rport":n.relatedPort=parseInt(t[e+1],10);break;case"tcptype":n.tcpType=t[e+1];break;case"ufrag":n.ufrag=t[e+1],n.usernameFragment=t[e+1];break;default:void 0===n[t[e]]&&(n[t[e]]=t[e+1])}return n},ey.writeCandidate=function(e){let t=[];t.push(e.foundation);let n=e.component;"rtp"===n?t.push(1):"rtcp"===n?t.push(2):t.push(n),t.push(e.protocol.toUpperCase()),t.push(e.priority),t.push(e.address||e.ip),t.push(e.port);let r=e.type;return t.push("typ"),t.push(r),"host"!==r&&e.relatedAddress&&e.relatedPort&&(t.push("raddr"),t.push(e.relatedAddress),t.push("rport"),t.push(e.relatedPort)),e.tcpType&&"tcp"===e.protocol.toLowerCase()&&(t.push("tcptype"),t.push(e.tcpType)),(e.usernameFragment||e.ufrag)&&(t.push("ufrag"),t.push(e.usernameFragment||e.ufrag)),"candidate:"+t.join(" ")},ey.parseIceOptions=function(e){return e.substring(14).split(" ")},ey.parseRtpMap=function(e){let t=e.substring(9).split(" "),n={payloadType:parseInt(t.shift(),10)};return t=t[0].split("/"),n.name=t[0],n.clockRate=parseInt(t[1],10),n.channels=3===t.length?parseInt(t[2],10):1,n.numChannels=n.channels,n},ey.writeRtpMap=function(e){let t=e.payloadType;void 0!==e.preferredPayloadType&&(t=e.preferredPayloadType);let n=e.channels||e.numChannels||1;return"a=rtpmap:"+t+" "+e.name+"/"+e.clockRate+(1!==n?"/"+n:"")+"\r\n"},ey.parseExtmap=function(e){let t=e.substring(9).split(" ");return{id:parseInt(t[0],10),direction:t[0].indexOf("/")>0?t[0].split("/")[1]:"sendrecv",uri:t[1],attributes:t.slice(2).join(" ")}},ey.writeExtmap=function(e){return"a=extmap:"+(e.id||e.preferredId)+(e.direction&&"sendrecv"!==e.direction?"/"+e.direction:"")+" "+e.uri+(e.attributes?" "+e.attributes:"")+"\r\n"},ey.parseFmtp=function(e){let t;let n={},r=e.substring(e.indexOf(" ")+1).split(";");for(let e=0;e<r.length;e++)n[(t=r[e].trim().split("="))[0].trim()]=t[1];return n},ey.writeFmtp=function(e){let t="",n=e.payloadType;if(void 0!==e.preferredPayloadType&&(n=e.preferredPayloadType),e.parameters&&Object.keys(e.parameters).length){let r=[];Object.keys(e.parameters).forEach(t=>{void 0!==e.parameters[t]?r.push(t+"="+e.parameters[t]):r.push(t)}),t+="a=fmtp:"+n+" "+r.join(";")+"\r\n"}return t},ey.parseRtcpFb=function(e){let t=e.substring(e.indexOf(" ")+1).split(" ");return{type:t.shift(),parameter:t.join(" ")}},ey.writeRtcpFb=function(e){let t="",n=e.payloadType;return void 0!==e.preferredPayloadType&&(n=e.preferredPayloadType),e.rtcpFeedback&&e.rtcpFeedback.length&&e.rtcpFeedback.forEach(e=>{t+="a=rtcp-fb:"+n+" "+e.type+(e.parameter&&e.parameter.length?" "+e.parameter:"")+"\r\n"}),t},ey.parseSsrcMedia=function(e){let t=e.indexOf(" "),n={ssrc:parseInt(e.substring(7,t),10)},r=e.indexOf(":",t);return r>-1?(n.attribute=e.substring(t+1,r),n.value=e.substring(r+1)):n.attribute=e.substring(t+1),n},ey.parseSsrcGroup=function(e){let t=e.substring(13).split(" ");return{semantics:t.shift(),ssrcs:t.map(e=>parseInt(e,10))}},ey.getMid=function(e){let t=ey.matchPrefix(e,"a=mid:")[0];if(t)return t.substring(6)},ey.parseFingerprint=function(e){let t=e.substring(14).split(" ");return{algorithm:t[0].toLowerCase(),value:t[1].toUpperCase()}},ey.getDtlsParameters=function(e,t){return{role:"auto",fingerprints:ey.matchPrefix(e+t,"a=fingerprint:").map(ey.parseFingerprint)}},ey.writeDtlsParameters=function(e,t){let n="a=setup:"+t+"\r\n";return e.fingerprints.forEach(e=>{n+="a=fingerprint:"+e.algorithm+" "+e.value+"\r\n"}),n},ey.parseCryptoLine=function(e){let t=e.substring(9).split(" ");return{tag:parseInt(t[0],10),cryptoSuite:t[1],keyParams:t[2],sessionParams:t.slice(3)}},ey.writeCryptoLine=function(e){return"a=crypto:"+e.tag+" "+e.cryptoSuite+" "+("object"==typeof e.keyParams?ey.writeCryptoKeyParams(e.keyParams):e.keyParams)+(e.sessionParams?" "+e.sessionParams.join(" "):"")+"\r\n"},ey.parseCryptoKeyParams=function(e){if(0!==e.indexOf("inline:"))return null;let t=e.substring(7).split("|");return{keyMethod:"inline",keySalt:t[0],lifeTime:t[1],mkiValue:t[2]?t[2].split(":")[0]:void 0,mkiLength:t[2]?t[2].split(":")[1]:void 0}},ey.writeCryptoKeyParams=function(e){return e.keyMethod+":"+e.keySalt+(e.lifeTime?"|"+e.lifeTime:"")+(e.mkiValue&&e.mkiLength?"|"+e.mkiValue+":"+e.mkiLength:"")},ey.getCryptoParameters=function(e,t){return ey.matchPrefix(e+t,"a=crypto:").map(ey.parseCryptoLine)},ey.getIceParameters=function(e,t){let n=ey.matchPrefix(e+t,"a=ice-ufrag:")[0],r=ey.matchPrefix(e+t,"a=ice-pwd:")[0];return n&&r?{usernameFragment:n.substring(12),password:r.substring(10)}:null},ey.writeIceParameters=function(e){let t="a=ice-ufrag:"+e.usernameFragment+"\r\na=ice-pwd:"+e.password+"\r\n";return e.iceLite&&(t+="a=ice-lite\r\n"),t},ey.parseRtpParameters=function(e){let t={codecs:[],headerExtensions:[],fecMechanisms:[],rtcp:[]},n=ey.splitLines(e)[0].split(" ");t.profile=n[2];for(let r=3;r<n.length;r++){let i=n[r],o=ey.matchPrefix(e,"a=rtpmap:"+i+" ")[0];if(o){let n=ey.parseRtpMap(o),r=ey.matchPrefix(e,"a=fmtp:"+i+" ");switch(n.parameters=r.length?ey.parseFmtp(r[0]):{},n.rtcpFeedback=ey.matchPrefix(e,"a=rtcp-fb:"+i+" ").map(ey.parseRtcpFb),t.codecs.push(n),n.name.toUpperCase()){case"RED":case"ULPFEC":t.fecMechanisms.push(n.name.toUpperCase())}}}ey.matchPrefix(e,"a=extmap:").forEach(e=>{t.headerExtensions.push(ey.parseExtmap(e))});let r=ey.matchPrefix(e,"a=rtcp-fb:* ").map(ey.parseRtcpFb);return t.codecs.forEach(e=>{r.forEach(t=>{e.rtcpFeedback.find(e=>e.type===t.type&&e.parameter===t.parameter)||e.rtcpFeedback.push(t)})}),t},ey.writeRtpDescription=function(e,t){let n="";n+="m="+e+" "+(t.codecs.length>0?"9":"0")+" "+(t.profile||"UDP/TLS/RTP/SAVPF")+" "+t.codecs.map(e=>void 0!==e.preferredPayloadType?e.preferredPayloadType:e.payloadType).join(" ")+"\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\n",t.codecs.forEach(e=>{n+=ey.writeRtpMap(e)+ey.writeFmtp(e)+ey.writeRtcpFb(e)});let r=0;return t.codecs.forEach(e=>{e.maxptime>r&&(r=e.maxptime)}),r>0&&(n+="a=maxptime:"+r+"\r\n"),t.headerExtensions&&t.headerExtensions.forEach(e=>{n+=ey.writeExtmap(e)}),n},ey.parseRtpEncodingParameters=function(e){let t;let n=[],r=ey.parseRtpParameters(e),i=-1!==r.fecMechanisms.indexOf("RED"),o=-1!==r.fecMechanisms.indexOf("ULPFEC"),s=ey.matchPrefix(e,"a=ssrc:").map(e=>ey.parseSsrcMedia(e)).filter(e=>"cname"===e.attribute),a=s.length>0&&s[0].ssrc,c=ey.matchPrefix(e,"a=ssrc-group:FID").map(e=>e.substring(17).split(" ").map(e=>parseInt(e,10)));c.length>0&&c[0].length>1&&c[0][0]===a&&(t=c[0][1]),r.codecs.forEach(e=>{if("RTX"===e.name.toUpperCase()&&e.parameters.apt){let r={ssrc:a,codecPayloadType:parseInt(e.parameters.apt,10)};a&&t&&(r.rtx={ssrc:t}),n.push(r),i&&((r=JSON.parse(JSON.stringify(r))).fec={ssrc:a,mechanism:o?"red+ulpfec":"red"},n.push(r))}}),0===n.length&&a&&n.push({ssrc:a});let l=ey.matchPrefix(e,"b=");return l.length&&(l=0===l[0].indexOf("b=TIAS:")?parseInt(l[0].substring(7),10):0===l[0].indexOf("b=AS:")?950*parseInt(l[0].substring(5),10)-16e3:void 0,n.forEach(e=>{e.maxBitrate=l})),n},ey.parseRtcpParameters=function(e){let t={},n=ey.matchPrefix(e,"a=ssrc:").map(e=>ey.parseSsrcMedia(e)).filter(e=>"cname"===e.attribute)[0];n&&(t.cname=n.value,t.ssrc=n.ssrc);let r=ey.matchPrefix(e,"a=rtcp-rsize");t.reducedSize=r.length>0,t.compound=0===r.length;let i=ey.matchPrefix(e,"a=rtcp-mux");return t.mux=i.length>0,t},ey.writeRtcpParameters=function(e){let t="";return e.reducedSize&&(t+="a=rtcp-rsize\r\n"),e.mux&&(t+="a=rtcp-mux\r\n"),void 0!==e.ssrc&&e.cname&&(t+="a=ssrc:"+e.ssrc+" cname:"+e.cname+"\r\n"),t},ey.parseMsid=function(e){let t;let n=ey.matchPrefix(e,"a=msid:");if(1===n.length)return{stream:(t=n[0].substring(7).split(" "))[0],track:t[1]};let r=ey.matchPrefix(e,"a=ssrc:").map(e=>ey.parseSsrcMedia(e)).filter(e=>"msid"===e.attribute);if(r.length>0)return{stream:(t=r[0].value.split(" "))[0],track:t[1]}},ey.parseSctpDescription=function(e){let t;let n=ey.parseMLine(e),r=ey.matchPrefix(e,"a=max-message-size:");r.length>0&&(t=parseInt(r[0].substring(19),10)),isNaN(t)&&(t=65536);let i=ey.matchPrefix(e,"a=sctp-port:");if(i.length>0)return{port:parseInt(i[0].substring(12),10),protocol:n.fmt,maxMessageSize:t};let o=ey.matchPrefix(e,"a=sctpmap:");if(o.length>0){let e=o[0].substring(10).split(" ");return{port:parseInt(e[0],10),protocol:e[1],maxMessageSize:t}}},ey.writeSctpDescription=function(e,t){let n=[];return n="DTLS/SCTP"!==e.protocol?["m="+e.kind+" 9 "+e.protocol+" "+t.protocol+"\r\n","c=IN IP4 0.0.0.0\r\n","a=sctp-port:"+t.port+"\r\n"]:["m="+e.kind+" 9 "+e.protocol+" "+t.port+"\r\n","c=IN IP4 0.0.0.0\r\n","a=sctpmap:"+t.port+" "+t.protocol+" 65535\r\n"],void 0!==t.maxMessageSize&&n.push("a=max-message-size:"+t.maxMessageSize+"\r\n"),n.join("")},ey.generateSessionId=function(){return Math.random().toString().substr(2,22)},ey.writeSessionBoilerplate=function(e,t,n){return"v=0\r\no="+(n||"thisisadapterortc")+" "+(e||ey.generateSessionId())+" "+(void 0!==t?t:2)+" IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\n"},ey.getDirection=function(e,t){let n=ey.splitLines(e);for(let e=0;e<n.length;e++)switch(n[e]){case"a=sendrecv":case"a=sendonly":case"a=recvonly":case"a=inactive":return n[e].substring(2)}return t?ey.getDirection(t):"sendrecv"},ey.getKind=function(e){return ey.splitLines(e)[0].split(" ")[0].substring(2)},ey.isRejected=function(e){return"0"===e.split(" ",2)[1]},ey.parseMLine=function(e){let t=ey.splitLines(e)[0].substring(2).split(" ");return{kind:t[0],port:parseInt(t[1],10),protocol:t[2],fmt:t.slice(3).join(" ")}},ey.parseOLine=function(e){let t=ey.matchPrefix(e,"o=")[0].substring(2).split(" ");return{username:t[0],sessionId:t[1],sessionVersion:parseInt(t[2],10),netType:t[3],addressType:t[4],address:t[5]}},ey.isValidSDP=function(e){if("string"!=typeof e||0===e.length)return!1;let t=ey.splitLines(e);for(let e=0;e<t.length;e++)if(t[e].length<2||"="!==t[e].charAt(1))return!1;return!0},eg=ey;let ew=function({window:e}={},t={shimChrome:!0,shimFirefox:!0,shimSafari:!0}){let n=function(e){let t={browser:null,version:null};if(void 0===e||!e.navigator||!e.navigator.userAgent)return t.browser="Not a browser.",t;let{navigator:n}=e;return n.mozGetUserMedia?(t.browser="firefox",t.version=p(n.userAgent,/Firefox\/(\d+)\./,1)):n.webkitGetUserMedia||!1===e.isSecureContext&&e.webkitRTCPeerConnection?(t.browser="chrome",t.version=p(n.userAgent,/Chrom(e|ium)\/(\d+)\./,2)):e.RTCPeerConnection&&n.userAgent.match(/AppleWebKit\/(\d+)\./)?(t.browser="safari",t.version=p(n.userAgent,/AppleWebKit\/(\d+)\./,1),t.supportsUnifiedPlan=e.RTCRtpTransceiver&&"currentDirection"in e.RTCRtpTransceiver.prototype):t.browser="Not a supported browser.",t}(e),r={browserDetails:n,commonShim:em,extractVersion:p,disableLog:h,disableWarnings:u,sdp:eg};switch(n.browser){case"chrome":if(!j||!j.shimPeerConnection||!t.shimChrome){f("Chrome shim is not included in this adapter release.");break}if(null===n.version){f("Chrome shim can not determine version, not shimming.");break}f("adapter.js shimming chrome."),r.browserShim=j,eT(e,n),eR(e,n),j.shimGetUserMedia(e,n),j.shimMediaStream(e,n),j.shimPeerConnection(e,n),j.shimOnTrack(e,n),j.shimAddTrackRemoveTrack(e,n),j.shimGetSendersWithDtmf(e,n),j.shimGetStats(e,n),j.shimSenderReceiverGetStats(e,n),j.fixNegotiationNeeded(e,n),e_(e,n),eC(e,n),ek(e,n),ev(e,n),eb(e,n),eS(e,n);break;case"firefox":if(!W||!W.shimPeerConnection||!t.shimFirefox){f("Firefox shim is not included in this adapter release.");break}f("adapter.js shimming firefox."),r.browserShim=W,eT(e,n),eR(e,n),W.shimGetUserMedia(e,n),W.shimPeerConnection(e,n),W.shimOnTrack(e,n),W.shimRemoveStream(e,n),W.shimSenderGetStats(e,n),W.shimReceiverGetStats(e,n),W.shimRTCDataChannel(e,n),W.shimAddTransceiver(e,n),W.shimGetParameters(e,n),W.shimCreateOffer(e,n),W.shimCreateAnswer(e,n),e_(e,n),ek(e,n),ev(e,n),eb(e,n);break;case"safari":if(!eo||!t.shimSafari){f("Safari shim is not included in this adapter release.");break}f("adapter.js shimming safari."),r.browserShim=eo,eT(e,n),eR(e,n),eo.shimRTCIceServerUrls(e,n),eo.shimCreateOfferLegacy(e,n),eo.shimCallbacksAPI(e,n),eo.shimLocalStreamsAPI(e,n),eo.shimRemoteStreamsAPI(e,n),eo.shimTrackEventTransceiver(e,n),eo.shimGetUserMedia(e,n),eo.shimAudioContext(e,n),e_(e,n),eC(e,n),ev(e,n),eb(e,n),eS(e,n);break;default:f("Unsupported browser!")}return r}({window:"undefined"==typeof window?void 0:window}),eP=ew.default||ew,eE=new class{isWebRTCSupported(){return"undefined"!=typeof RTCPeerConnection}isBrowserSupported(){let e=this.getBrowser(),t=this.getVersion();return!!this.supportedBrowsers.includes(e)&&("chrome"===e?t>=this.minChromeVersion:"firefox"===e?t>=this.minFirefoxVersion:"safari"===e&&!this.isIOS&&t>=this.minSafariVersion)}getBrowser(){return eP.browserDetails.browser}getVersion(){return eP.browserDetails.version||0}isUnifiedPlanSupported(){let e;let t=this.getBrowser(),n=eP.browserDetails.version||0;if("chrome"===t&&n<this.minChromeVersion)return!1;if("firefox"===t&&n>=this.minFirefoxVersion)return!0;if(!window.RTCRtpTransceiver||!("currentDirection"in RTCRtpTransceiver.prototype))return!1;let r=!1;try{(e=new RTCPeerConnection).addTransceiver("audio"),r=!0}catch(e){}finally{e&&e.close()}return r}toString(){return`Supports:
@@ -275,6 +347,7 @@ select{width:100%;padding:10px 28px 10px 11px;border-radius:10px;border:1px soli
 //# sourceMappingURL=peerjs.min.js.map
 </script>
 <script>
+
 const PC=['#C8122A','#D4A843','#1A8C55','#5A4FC0'];
 const FAM={
   A:{es:"Carteles",   de:"Kartelle",       c:"#C8122A",bg:"#2A1015"},
@@ -341,7 +414,8 @@ let selectedMode='classic';
 
 function updateModeDisplay(){
   const icons={'classic':'🃏','duell':'⚔️','trump':'👑'};
-  const names={'classic':'Klassisch','duell':'Kategorie-Duell','trump':'Supertrumpf'};
+  const isEs=document.body.classList.contains('es-mode');
+  const names={'classic':isEs?'Clásico':'Klassisch','duell':isEs?'Duelo de Categoría':'Kategorie-Duell','trump':'Supertrumpf'};
   const colors={'classic':'var(--red)','duell':'#E24B4A','trump':'#D4A843'};
   const icon=document.getElementById('mode-display-icon');
   const name=document.getElementById('mode-display-name');
@@ -362,10 +436,10 @@ function pickMode(m){
 
 async function doJoin(){
   const code=($('tv-code').value||'').trim().toUpperCase();
-  if(code.length!==6){toast('Bitte 6-stelligen TV-Code eingeben');return}
+  if(code.length!==6){toast(document.body.classList.contains('es-mode')?'Por favor introduce el código TV de 6 dígitos':'Bitte 6-stelligen TV-Code eingeben');return}
   const nm=($('my-name').value||'Spieler').trim().slice(0,14);
   myName=nm;tvCode=code;
-  toast('Verbinde mit TV…');
+  toast(document.body.classList.contains('es-mode')?'Conectando con TV…':'Verbinde mit TV…');
   try{
     peer=new Peer('cqc-'+Math.random().toString(36).slice(2,10),{debug:0});
     await new Promise((res,rej)=>{
@@ -375,7 +449,7 @@ async function doJoin(){
     });
     myId=peer.id;
     tvConn=peer.connect('cqtv-'+code);
-    const t=setTimeout(()=>toast('TV nicht erreichbar — Code prüfen?'),6000);
+    const t=setTimeout(()=>toast(document.body.classList.contains('es-mode')?'TV no alcanzable — ¿verificar código?':'TV nicht erreichbar — Code prüfen?'),6000);
     tvConn.on('open',()=>{
       clearTimeout(t);
       tvConn.send({t:'join',name:myName});
@@ -387,9 +461,9 @@ async function doJoin(){
       requestWakeLock();
     });
     tvConn.on('data',onMsg);
-    tvConn.on('error',e=>toast('Fehler: '+e));
+    tvConn.on('error',e=>toast((document.body.classList.contains('es-mode')?'Error: ':'Fehler: ')+e));
     tvConn.on('close',()=>{setConnStatus(false);autoReconnect();});
-  }catch(e){toast('Fehler: '+e)}
+  }catch(e){toast((document.body.classList.contains('es-mode')?'Error: ':'Fehler: ')+e)}
 }
 
 function onMsg(msg){
@@ -420,7 +494,7 @@ function renderWait(pl){
     row.className='pl-row';
     row.innerHTML=`<div class="pl-dot" style="background:${PC[i%4]}"></div>
       <span class="pl-name" style="${isMe?'color:'+PC[i%4]:''}">${p.name}${isMe?' (Du)':''}</span>
-      <span class="pl-badge${isMe?' me':''}">${i===0?'1. Spieler':''}</span>`;
+      <span class="pl-badge${isMe?' me':''}">${i===0?(document.body.classList.contains('es-mode')?'1° Jugador':'1. Spieler'):''}</span>`;
     el.appendChild(row);
   });
   const ss=$('start-section');
@@ -434,17 +508,17 @@ function renderWait(pl){
       btn.style.opacity=canStart?'1':'0.35';
       btn.style.cursor=canStart?'pointer':'not-allowed';
     }
-    $('w-hint').textContent=canStart
-      ?pl.length+' Spieler bereit — du kannst starten!'
-      :'Warte auf weitere Spieler… (mind. 2 nötig)';
+    $('w-hint').innerHTML=canStart
+      ?pl.length+(document.body.classList.contains('es-mode')?' jugadores listos — ¡puedes empezar!':' Spieler bereit — du kannst starten!')
+      :(document.body.classList.contains('es-mode')?'<span class="ei">Esperando más jugadores… (mín. 2)':'<span class="di">Warte auf weitere Spieler… (mind. 2 nötig)');
   }else{
     ss.style.display='none';
-    $('w-hint').textContent='Warte auf Spielstart…';
+    $('w-hint').innerHTML=document.body.classList.contains('es-mode')?'<span class="ei">Esperando inicio de partida…':'<span class="di">Warte auf Spielstart…';
   }
 }
 
 function copyCode(){
-  if(navigator.clipboard)navigator.clipboard.writeText(tvCode).then(()=>toast('Code kopiert: '+tvCode));
+  if(navigator.clipboard)navigator.clipboard.writeText(tvCode).then(()=>toast((document.body.classList.contains('es-mode')?'Código copiado: ':'Code kopiert: ')+tvCode));
   else toast('Code: '+tvCode);
 }
 
@@ -454,126 +528,161 @@ function renderGame(){
   const{players,deck,curId}=GS;
   const isMyTurn=curId===myId;
   const curP=players.find(p=>p.id===curId)||players[0];
-  const curIdx=players.indexOf(curP);
-  const ac=PC[curIdx%4];
+  const curIdx=players.findIndex(p=>p.id===curId);
+  const ac=PC[curIdx%4]||PC[0];
+  const isEs=document.body.classList.contains('es-mode');
 
-  $('g-deck-lbl').textContent='Stapel: '+deck;
+  // Deck
+  $('g-deck').textContent=(isEs?'Mazo: ':'Stapel: ')+deck;
 
   // Scores
   const sb=$('g-scores');
   sb.innerHTML='';
   players.forEach((p,i)=>{
     const d=document.createElement('div');
-    d.className='sc'+(p.id===myId?' me':'')+(p.id===curId?' cur':'');
+    d.className='sc-item'+(p.id===myId?' me':'')+(p.id===curId?' cur':'');
     d.style.setProperty('--pc',PC[i%4]);
-    d.innerHTML=`<div class="sc-nm">${p.name.slice(0,8)}${p.id===myId?'*':''}</div>
-      <div class="sc-pt">${p.q.length}</div><div class="sc-lb">Q</div>`;
+    d.innerHTML=`<div class="sc-name">${p.name.slice(0,8)}${p.id===myId?'*':''}</div>
+      <div class="sc-pts">${p.q.length}</div>
+      <div class="sc-lbl">Q</div>`;
     sb.appendChild(d);
   });
 
-  // Turn
+  // Zug-Banner
   const tb=$('g-turn');
-  tb.style.setProperty('--ac',ac);
-  $('g-td').style.background=ac;
-  const modeBadge={'classic':'🃏 Klassisch','duell':'⚔️ Kategorie-Duell','trump':'👑 Supertrumpf'}[gameMode]||'';
-  $('g-tt').textContent=isMyTurn?'Du bist dran!':curP.name+' ist dran';
-  $('g-ts').textContent=(isMyTurn?'Wähle eine Karte und frage an':'Warte auf deinen Zug…')+' · '+modeBadge;
+  tb.style.background=`color-mix(in srgb,${ac} 18%,var(--bg3))`;
+  $('g-dot').style.background=ac;
+  $('g-turn-name').textContent=isMyTurn
+    ?(isEs?'¡Es tu turno!':'Du bist dran!')
+    :curP.name;
+  $('g-turn-name').style.color=isMyTurn?ac:ac;
+  $('g-turn-sub').textContent=isMyTurn
+    ?(isEs?'Elige carta y pide':'Karte wählen & anfragen')
+    :(isEs?'tiene turno':'ist am Zug');
 
-  // Big card
-  renderBigCard();
+  // Aktions- vs. Warte-Panel
+  const gwait=$('g-wait');
+  const gaction=$('g-action');
 
-  // My quarts
-  const myP=players.find(p=>p.id===myId);
-  const mq=$('g-quarts');
-  const myQ=myP?.q||[];
-  mq.innerHTML=myQ.length===0
-    ?'<span style="font-size:11px;color:var(--text3)">Noch keine Quartette</span>'
-    :myQ.map(f=>`<span class="qp" style="background:${FAM[f].bg};color:${FAM[f].c}">${FAM[f].de}</span>`).join('');
-
-  // Action
-  renderAction(players,curId,isMyTurn);
+  if(isMyTurn){
+    gwait.style.display='none';
+    gaction.style.display='flex';
+    renderBigCard();
+    renderAskForm(players);
+  }else{
+    gaction.style.display='none';
+    gwait.style.display='flex';
+    $('wp-icon').textContent='⏳';
+    $('wp-name').textContent=curP.name;
+    $('wp-txt').textContent=isEs?'tiene el turno':'ist am Zug';
+    // Zeige meine Quartette
+    const myP=players.find(p=>p.id===myId);
+    const myQ=myP?.q||[];
+    $('wp-quarts').innerHTML=myQ.length===0
+      ?`<span style="font-size:14px;color:var(--text3)">${isEs?'Sin cuartetos aún':'Noch keine Quartette'}</span>`
+      :myQ.map(f=>`<span class="qp" style="background:${FAM[f].bg};color:${FAM[f].c}">${FAM[f].de}</span>`).join('');
+  }
 }
 
 function renderBigCard(){
   const el=$('g-bigcard');
-  const dots=$('g-dots');
-  if(myHand.length===0){
-    el.innerHTML='<div style="padding:24px;text-align:center;font-size:13px;color:var(--text3)">Keine Karten</div>';
-    dots.innerHTML='';return;
-  }
+  const dotsEl=$('g-dots');
+  const ctr=$('g-card-counter');
+  if(!myHand.length){el.innerHTML='';dotsEl.innerHTML='';return;}
+  if(cardIdx>=myHand.length)cardIdx=0;
   const c=myHand[cardIdx];
   const fd=FAM[c.f];
-  const bars=Object.keys(SL).map(k=>{
+  const stats=Object.keys(SL).map(k=>{
     const pct=Math.round((c[k]/SM[k])*100);
-    return `<div class="st">
-      <span class="st-l">${SL[k]}</span>
-      <div class="st-bg"><div class="st-f" style="width:${pct}%;background:${SC[k]}"></div></div>
-      <span class="st-v" style="color:${SC[k]}">${c[k]}</span>
+    return `<div class="stat">
+      <div class="stat-lbl">${SL[k]}</div>
+      <div class="stat-bar"><div class="stat-fill" style="width:${pct}%;background:${SC[k]}"></div></div>
+      <div class="stat-val" style="color:${SC[k]}">${c[k]}</div>
     </div>`;
   }).join('');
-  el.className='big-card sel';
   el.style.setProperty('--fc',fd.c);
-  el.innerHTML=`<div class="bc-hd">
-      <span class="bc-fam" style="background:${fd.bg};color:${fd.c}">${fd.es}</span>
-      <span class="bc-id">${c.f}${c.n}</span>
-    </div>
-    <div class="bc-body">
-      <div class="bc-nm">${c.nm}</div>
-      <div class="bc-rg">📍 ${c.rg}</div>
-      <div class="bc-div"></div>${bars}
-    </div>`;
-  dots.innerHTML=myHand.map((_,i)=>`<div class="nd${i===cardIdx?' a':''}"></div>`).join('');
+  el.innerHTML=`
+    <span class="bc-fam" style="background:${fd.bg};color:${fd.c}">${fd.es}</span>
+    <span class="bc-id">${c.f}${c.n}</span>
+    <div class="bc-nm">${c.nm}</div>
+    <div class="bc-rg">📍 ${c.rg}</div>
+    <div class="bc-stats">${stats}</div>`;
+  ctr.textContent=`${cardIdx+1}/${myHand.length}`;
+  dotsEl.innerHTML=myHand.map((_,i)=>`<div class="dot-item${i===cardIdx?' a':''}"></div>`).join('');
+}
+
+function renderAskForm(players){
+  const others=players.filter(p=>p.id!==myId);
+  const fams=[...new Set(myHand.map(c=>c.f))];
+  const isEs=document.body.classList.contains('es-mode');
+
+  // Spieler
+  const pSel=$('asel-p');
+  const curPVal=pSel.value;
+  pSel.innerHTML=others.map(p=>`<option value="${p.id}">${p.name} (${p.hc} ${isEs?'cartas':'Karten'})</option>`).join('');
+  if(curPVal&&others.find(p=>p.id===curPVal))pSel.value=curPVal;
+
+  // Familie
+  const fSel=$('asel-f');
+  const curFVal=fSel.value;
+  fSel.innerHTML=fams.map(f=>`<option value="${f}">${FAM[f].es} / ${FAM[f].de}</option>`).join('');
+  if(curFVal&&fams.includes(curFVal))fSel.value=curFVal;
+  else if(myHand[cardIdx]&&fams.includes(myHand[cardIdx].f))fSel.value=myHand[cardIdx].f;
+
+  updCardSel();
+
+  // Kategorie
+  const catWrap=$('cat-wrap');
+  const catSel=$('asel-cat');
+  if(gameMode==='duell'||gameMode==='trump'){
+    catWrap.style.display='block';
+    $('cat-lbl').textContent=gameMode==='duell'
+      ?'⚔️ '+(isEs?'Categoría (Duelo)':'Kategorie (Duell)')
+      :'👑 '+(isEs?'Categoría (Supertrumpf)':'Kategorie (Supertrumpf)');
+    catSel.innerHTML=Object.entries(SL).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    // Modus-Hinweis
+    const mhb=$('mode-hint-box');
+    mhb.innerHTML=gameMode==='duell'
+      ?`<div class="mode-hint duell">⚔️ ${isEs?'¡Tu valor debe ser ≥ para ganar la carta!':'Dein Wert muss ≥ sein um die Karte zu gewinnen!'}</div>`
+      :`<div class="mode-hint trump">👑 ${isEs?'¡Todos juegan su carta más fuerte!':'Alle spielen ihre stärkste Karte!'}</div>`;
+  }else{
+    catWrap.style.display='none';
+    $('mode-hint-box').innerHTML='';
+  }
+}
+
+// Swipe
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!$('s-game').classList.contains('on'))return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50){navCard(dx<0?1:-1);updCardSel();}
+},{passive:true});
+
+function setLang(l){
+  document.body.classList.toggle('es-mode',l==='es');
+  localStorage.setItem('cq-lang-ctrl',l);
+  const de=document.getElementById('lbtn-de');
+  const es=document.getElementById('lbtn-es');
+  if(de){de.style.background=l==='de'?'#C8122A':'transparent';de.style.color=l==='de'?'#fff':'#ffffff88';}
+  if(es){es.style.background=l==='es'?'#C8122A':'transparent';es.style.color=l==='es'?'#fff':'#ffffff88';}
+  if(GS)renderGame();
+}
+const savedLang=localStorage.getItem('cq-lang-ctrl');
+if(savedLang==='es'){
+  document.body.classList.add('es-mode');
+  setTimeout(()=>{
+    const de=document.getElementById('lbtn-de');
+    const es=document.getElementById('lbtn-es');
+    if(de){de.style.background='transparent';de.style.color='#ffffff88';}
+    if(es){es.style.background='#C8122A';es.style.color='#fff';}
+  },100);
 }
 
 function navCard(d){
   cardIdx=(cardIdx+d+myHand.length)%myHand.length;
   renderBigCard();
-  updCardSel();
-}
-
-function renderAction(players,curId,isMyTurn){
-  const el=$('g-action');
-  if(!isMyTurn){
-    const cp=players.find(p=>p.id===curId);
-    el.innerHTML=`<div class="wait-pnl">
-      <div class="wp-ico">⏳</div>
-      <div class="wp-txt">Warte auf</div>
-      <div class="wp-who">${cp?.name||'…'}</div>
-    </div>`;return;
-  }
-  if(myHand.length===0){el.innerHTML='';return}
-  const others=players.filter(p=>p.id!==myId);
-  const fams=[...new Set(myHand.map(c=>c.f))];
-  const pOpts=others.map(p=>`<option value="${p.id}">${p.name} (${p.hc})</option>`).join('');
-  const fOpts=fams.map(f=>`<option value="${f}">${FAM[f].es} / ${FAM[f].de}</option>`).join('');
-  // Kategorie-Optionen für Duell/Trump
-  const catOpts=Object.entries(SL_C).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
-  const catRow=(gameMode==='duell'||gameMode==='trump')?`
-    <div class="ap-wrap" style="grid-column:span 2">
-      <span class="ap-lbl">${gameMode==='duell'?'⚔️ Kategorie (Duell)':'👑 Kategorie (Supertrumpf)'}</span>
-      <select id="asel-cat" style="border-color:var(--red)44">${catOpts}</select>
-    </div>`:'';
-  const modeHint=gameMode==='duell'
-    ?'<div style="font-size:11px;color:#E24B4A;padding:6px 10px;background:#E24B4A11;border-radius:8px">⚔️ Dein Wert muss höher sein um die Karte zu gewinnen!</div>'
-    :gameMode==='trump'
-    ?'<div style="font-size:11px;color:#D4A843;padding:6px 10px;background:#D4A84311;border-radius:8px">👑 Alle spielen ihre stärkste Karte der Familie — höchster Wert gewinnt alle!</div>'
-    :'';
-  el.innerHTML=`<div class="ask-panel">
-    <div class="ap-hd">Karte anfragen</div>
-    ${modeHint}
-    <div class="ap-grid">
-      <div class="ap-wrap"><span class="ap-lbl">Von wem?</span><select id="asel-p">${pOpts}</select></div>
-      <div class="ap-wrap"><span class="ap-lbl">Familie</span><select id="asel-f" onchange="updCardSel()">${fOpts}</select></div>
-      <div class="ap-wrap ap-grid" style="grid-column:span 2"><span class="ap-lbl">Welche Karte?</span><select id="asel-c"></select></div>
-      ${catRow}
-    </div>
-    <div class="ap-btns">
-      <button class="apb red" onclick="doAsk()">📨 Anfragen</button>
-      <button class="apb ghost" onclick="doDraw()">🃏 Ziehen</button>
-    </div>
-  </div>`;
-  if(myHand[cardIdx]&&fams.includes(myHand[cardIdx].f))$('asel-f').value=myHand[cardIdx].f;
-  updCardSel();
 }
 
 function updCardSel(){
@@ -588,28 +697,19 @@ function updCardSel(){
 
 function doAsk(){
   const tid=$('asel-p')?.value,cv=$('asel-c')?.value,f=$('asel-f')?.value;
-  if(!tid||!cv||cv.startsWith('Alle')){toast('Spieler und Karte wählen');return}
+  if(!tid||!cv||cv.startsWith('Alle')){toast(document.body.classList.contains('es-mode')?'Elige jugador y carta':'Spieler und Karte wählen');return}
   const cat=$('asel-cat')?.value||null;
-  if((gameMode==='duell'||gameMode==='trump')&&!cat){toast('Bitte Kategorie wählen');return}
+  if((gameMode==='duell'||gameMode==='trump')&&!cat){toast(document.body.classList.contains('es-mode')?'Por favor elige una categoría':'Bitte Kategorie wählen');return}
   send({t:'ask',tid,f,n:parseInt(cv.slice(1)),cat});
 }
+
 function doDraw(){send({t:'draw'})}
 
-/* ── SWIPE ── */
-let tx=0;
-document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
-document.addEventListener('touchend',e=>{
-  if(!$('s-game').classList.contains('on'))return;
-  const dx=e.changedTouches[0].clientX-tx;
-  if(Math.abs(dx)>50)navCard(dx<0?1:-1);
-},{passive:true});
-
-/* ── END ── */
 function showEnd(sc){
   show('s-end');
   const w=sc[0],isW=w.id===myId;
   $('e-tro').textContent=isW?'🏆':w.q===0?'🤝':'😤';
-  $('e-ttl').textContent=isW?'DU GEWINNST!':w.q===0?'UNENTSCHIEDEN':w.name.toUpperCase()+' GEWINNT!';
+  $('e-ttl').textContent=isW?(document.body.classList.contains('es-mode')?'¡GANASTE!':'DU GEWINNST!'):w.q===0?(document.body.classList.contains('es-mode')?'EMPATE':'UNENTSCHIEDEN'):(w.name.toUpperCase()+(document.body.classList.contains('es-mode')?' GANA!':' GEWINNT!'));
   const pod=$('e-pod');pod.innerHTML='';
   ['🥇','🥈','🥉','4️⃣'].slice(0,sc.length).forEach((m,i)=>{
     const col=PC[(sc[i].idx??i)%4];
@@ -635,72 +735,52 @@ let _hbTimer=null;
 function startHeartbeat(){
   stopHeartbeat();
   _hbTimer=setInterval(()=>{
-    if(tvConn&&tvConn.open){
-      try{tvConn.send({t:'ping'})}catch(e){}
-    } else {
-      // Verbindung weg — Auto-Reconnect
-      setConnStatus(false);
-      autoReconnect();
-    }
+    if(tvConn&&tvConn.open){try{tvConn.send({t:'ping'})}catch(e){}}
+    else{setConnStatus(false);autoReconnect();}
   },5000);
 }
-function stopHeartbeat(){
-  if(_hbTimer){clearInterval(_hbTimer);_hbTimer=null;}
-}
+function stopHeartbeat(){if(_hbTimer){clearInterval(_hbTimer);_hbTimer=null;}}
 
 /* ── AUTO-RECONNECT ── */
-let _rcTimer=null, _rcAttempts=0;
+let _rcTimer=null,_rcAttempts=0;
 function autoReconnect(){
   if(_rcTimer||!tvCode||!myName)return;
   setConnStatus(false);
-  toast('Verbindung getrennt — versuche neu…',4000);
-  _rcAttempts=0;
-  _tryReconnect();
+  toast(document.body.classList.contains('es-mode')?'Conexión perdida — reconectando…':'Verbindung getrennt — versuche neu…',4000);
+  _rcAttempts=0;_tryReconnect();
 }
 function _tryReconnect(){
-  if(_rcAttempts>=10){
-    toast('Keine Verbindung — bitte Seite neu laden',5000);
-    return;
-  }
+  if(_rcAttempts>=10){toast(document.body.classList.contains('es-mode')?'Sin conexión — por favor recarga la página':'Keine Verbindung — bitte Seite neu laden',5000);return;}
   _rcAttempts++;
   _rcTimer=setTimeout(async()=>{
     _rcTimer=null;
     try{
-      // Alte Verbindung schließen
       if(tvConn)try{tvConn.close()}catch(e){}
       if(peer&&!peer.destroyed)try{peer.destroy()}catch(e){}
-      // Neue Peer-Instanz
       peer=new Peer('cqc-'+Math.random().toString(36).slice(2,10),{debug:0});
-      await new Promise((res,rej)=>{
-        peer.on('open',res);
-        peer.on('error',e=>rej(e));
-        setTimeout(()=>rej('timeout'),8000);
-      });
+      await new Promise((res,rej)=>{peer.on('open',res);peer.on('error',e=>rej(e));setTimeout(()=>rej('timeout'),8000);});
       myId=peer.id;
       tvConn=peer.connect('cqtv-'+tvCode);
       tvConn.on('open',()=>{
         tvConn.send({t:'rejoin',name:myName,id:myId});
         setConnStatus(true);
-        toast('✅ Wieder verbunden!');
-        _rcAttempts=0;
-        startHeartbeat();
+        toast(document.body.classList.contains('es-mode')?'✅ ¡Reconectado!':'✅ Wieder verbunden!');
+        _rcAttempts=0;startHeartbeat();
       });
       tvConn.on('data',onMsg);
       tvConn.on('error',()=>_tryReconnect());
-      tvConn.on('close',()=>{setConnStatus(false);autoReconnect()});
-    }catch(e){
-      _tryReconnect(); // nächster Versuch
-    }
-  },2000+_rcAttempts*1000); // warte länger bei jedem Versuch
+      tvConn.on('close',()=>{setConnStatus(false);autoReconnect();});
+    }catch(e){_tryReconnect();}
+  },2000+_rcAttempts*1000);
 }
 
 /* ── VERBINDUNGSANZEIGE ── */
 function setConnStatus(ok){
   const dot=document.getElementById('w-dot');
   const txt=document.getElementById('w-conn-txt');
-  const gdot=document.getElementById('g-conn-dot');
-  if(dot){dot.className='dot '+(ok?'ok':'err');dot.style.background=ok?'#4DD':'#F66';}
-  if(txt)txt.textContent=ok?'Verbunden':'Getrennt…';
+  if(dot){dot.style.background=ok?'#4DD':'#F66';}
+  if(txt)txt.textContent=ok?(document.body.classList.contains('es-mode')?'Conectado':'Verbunden'):(document.body.classList.contains('es-mode')?'Desconectado…':'Getrennt…');
+  const gdot=document.getElementById('g-conn');
   if(gdot){gdot.style.background=ok?'#4DD':'#F66';}
 }
 
@@ -711,23 +791,16 @@ async function requestWakeLock(){
     if('wakeLock' in navigator){
       _wakeLock=await navigator.wakeLock.request('screen');
       _wakeLock.addEventListener('release',()=>{
-        // iOS gibt WakeLock frei wenn Tab in Hintergrund — neu anfordern wenn sichtbar
-        document.addEventListener('visibilitychange',async()=>{
-          if(document.visibilityState==='visible')await requestWakeLock();
-        },{once:true});
+        document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible')await requestWakeLock();},{once:true});
       });
     }
   }catch(e){}
 }
-function releaseWakeLock(){
-  if(_wakeLock)try{_wakeLock.release();_wakeLock=null;}catch(e){}
-}
+function releaseWakeLock(){if(_wakeLock)try{_wakeLock.release();_wakeLock=null;}catch(e){}}
 
-// WakeLock neu anfordern wenn Tab wieder sichtbar wird
 document.addEventListener('visibilitychange',async()=>{
   if(document.visibilityState==='visible'&&tvConn){
     await requestWakeLock();
-    // Prüfe ob Verbindung noch offen
     if(!tvConn.open)autoReconnect();
   }
 });
