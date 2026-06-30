@@ -380,6 +380,9 @@ function startGame(){
   bcast();renderBoard();
 }
 
+const DUEL_REVEAL_MS=2400, DUEL_COMPARE_MS=2200, DUEL_RESULT_MS=2200;
+const DUEL_TOTAL_MS=DUEL_REVEAL_MS+DUEL_COMPARE_MS+DUEL_RESULT_MS;
+
 function resolveDuel(ai,oi,cat){
   const aP=GS.players[ai],oP=GS.players[oi];
   const aCard=GS.curCard;
@@ -407,12 +410,12 @@ function resolveDuel(ai,oi,cat){
 
   addLog('⚔️ '+aP.name+' ('+aCard.f+aCard.n+') '+(isEs()?'vs':'gegen')+' '+oP.name+' ('+oCard.f+oCard.n+') — '+SL_TV[cat]+': '+aVal+' / '+oVal+' → '+winP.name+(isEs()?' gana, recibe la carta!':' gewinnt, erhält die Karte!'),'g');
 
-  // Beiden Beteiligten Ergebnis senden
-  send(aP.id,{t:'duelResult',won:aWins,cat,myVal:aVal,oppVal:oVal,oppName:oP.name});
-  send(oP.id,{t:'duelResult',won:!aWins,cat,myVal:oVal,oppVal:aVal,oppName:aP.name});
+  // Beiden Beteiligten vollständige Kartendaten + Ergebnis senden
+  send(aP.id,{t:'duelResult',won:aWins,cat,myVal:aVal,oppVal:oVal,oppName:oP.name,myCard:aCard,oppCard:oCard,amAsker:true});
+  send(oP.id,{t:'duelResult',won:!aWins,cat,myVal:oVal,oppVal:aVal,oppName:aP.name,myCard:oCard,oppCard:aCard,amAsker:false});
 
   if(gameOver()){
-    setTimeout(()=>endGame(),1800);
+    setTimeout(()=>endGame(),DUEL_TOTAL_MS);
     return;
   }
 
@@ -420,7 +423,7 @@ function resolveDuel(ai,oi,cat){
     nextTurn(winIdx);
     bcast();
     hideDuelBox();
-  },1800);
+  },DUEL_TOTAL_MS);
 }
 
 function nextTurn(idx){
