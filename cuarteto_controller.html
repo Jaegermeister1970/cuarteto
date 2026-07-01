@@ -106,6 +106,16 @@ html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans'
 .stat-fill{height:100%;border-radius:3px}
 .stat-val{font-size:13px;font-weight:700}
 
+.my-cards-header{display:flex;align-items:center;justify-content:space-between}
+.my-cards-lbl{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.card-nav{display:flex;align-items:center;gap:10px}
+.nav-btn{width:38px;height:38px;border-radius:10px;border:1px solid #ffffff12;background:var(--bg3);color:var(--text2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nav-btn:active{background:var(--bg4)}
+.card-counter{font-size:13px;color:var(--text3);min-width:50px;text-align:center}
+.dots{display:flex;justify-content:center;gap:6px;padding:8px 0}
+.dot-item{width:7px;height:7px;border-radius:50%;background:#ffffff15;transition:all .2s}
+.dot-item.a{background:var(--red);width:18px;border-radius:4px}
+
 .duel-form{background:var(--bg2);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
 .form-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
 select{width:100%;padding:15px 36px 15px 16px;border-radius:12px;border:1px solid #ffffff12;background:var(--bg3);color:var(--text);font-size:17px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364625E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
@@ -278,7 +288,16 @@ body.es-mode .ei{display:inline}
   </div>
 
   <div class="action-panel" id="g-action" style="display:none">
+    <div class="my-cards-header">
+      <span class="my-cards-lbl"><span class="di">Meine Karten</span><span class="ei">Mis Cartas</span></span>
+      <div class="card-nav">
+        <button class="nav-btn" onclick="navCard(-1)">‹</button>
+        <span class="card-counter" id="g-card-counter">1/1</span>
+        <button class="nav-btn" onclick="navCard(1)">›</button>
+      </div>
+    </div>
     <div class="big-card" id="g-bigcard"></div>
+    <div class="dots" id="g-dots"></div>
 
     <div class="duel-form">
       <div>
@@ -336,7 +355,7 @@ function toast(m,d=2500){const t=$('toast');t.textContent=m;t.classList.add('sho
 function isEs(){return document.body.classList.contains('es-mode')}
 
 let peer=null,tvConn=null,myId='',myName='',tvCode='';
-let GS=null,myCard=null,gPlayers=[];
+let GS=null,myHand=[],cardIdx=0,gPlayers=[];
 
 async function doJoin(){
   const code=($('tv-code').value||'').trim().toUpperCase();
@@ -374,7 +393,8 @@ function onMsg(msg){
   if(msg.t==='err'){toast(msg.m,3500);return}
   if(msg.t==='pl'){gPlayers=msg.pl;renderWait(msg.pl);return}
   if(msg.t==='state'){
-    GS=msg;myCard=msg.myCard||null;
+    GS=msg;myHand=msg.myHand||[];
+    if(cardIdx>=myHand.length)cardIdx=0;
     if(!$('s-game').classList.contains('on'))show('s-game');
     renderGame();
     return;
@@ -446,7 +466,7 @@ function renderGame(){
   const gwait=$('g-wait');
   const gaction=$('g-action');
 
-  if(isMyTurn&&myCard){
+  if(isMyTurn&&myHand.length>0){
     gwait.style.display='none';
     gaction.style.display='flex';
     renderBigCard();
@@ -480,11 +500,32 @@ function bigCardHTML(c){
 
 function renderBigCard(){
   const el=$('g-bigcard');
-  if(!myCard){el.innerHTML='';return;}
-  const {fc,html}=bigCardHTML(myCard);
+  const dotsEl=$('g-dots');
+  const ctr=$('g-card-counter');
+  if(!myHand.length){el.innerHTML='';dotsEl.innerHTML='';ctr.textContent='0/0';return;}
+  if(cardIdx>=myHand.length)cardIdx=0;
+  const c=myHand[cardIdx];
+  const {fc,html}=bigCardHTML(c);
   el.style.setProperty('--fc',fc);
   el.innerHTML=html;
+  ctr.textContent=`${cardIdx+1}/${myHand.length}`;
+  dotsEl.innerHTML=myHand.map((_,i)=>`<div class="dot-item${i===cardIdx?' a':''}"></div>`).join('');
 }
+
+function navCard(d){
+  if(!myHand.length)return;
+  cardIdx=(cardIdx+d+myHand.length)%myHand.length;
+  renderBigCard();
+}
+
+/* Wischen */
+let _swipeX=0;
+document.addEventListener('touchstart',e=>{_swipeX=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!$('g-action')||$('g-action').style.display==='none')return;
+  const dx=e.changedTouches[0].clientX-_swipeX;
+  if(Math.abs(dx)>50)navCard(dx<0?1:-1);
+},{passive:true});
 
 function renderDuelForm(){
   const catSel=$('asel-cat');
@@ -505,8 +546,10 @@ function doDuel(){
   const cat=$('asel-cat')?.value;
   const oppId=$('asel-opp')?.value;
   if(!cat||!oppId){toast(isEs()?'Elige categoría y rival':'Kategorie und Gegner wählen');return}
+  const card=myHand[cardIdx];
+  if(!card){toast(isEs()?'Elige una carta':'Wähle eine Karte');return}
   $('duel-btn').disabled=true;
-  send({t:'duel',cat,oppId});
+  send({t:'duel',cat,oppId,f:card.f,n:card.n});
 }
 
 const REVEAL_MS=2400, COMPARE_MS=2200, RESULT_MS=2200;
@@ -574,7 +617,7 @@ function goLobby(){
   stopHeartbeat();
   releaseWakeLock();
   if(peer)try{peer.destroy()}catch(e){}
-  peer=null;tvConn=null;GS=null;myCard=null;gPlayers=[];
+  peer=null;tvConn=null;GS=null;myHand=[];cardIdx=0;gPlayers=[];
   myName='';tvCode='';
   show('s-lobby');
 }
