@@ -74,7 +74,7 @@ body::before{content:'';position:fixed;inset:0;
 .pc-w-lbl{font-size:11px;color:var(--text3)}
 
 /* Card table — the big visual */
-.card-table{flex:1;display:grid;grid-template-columns:repeat(9,1fr);gap:8px;overflow:hidden;align-items:start;padding:4px}
+.card-table{flex:1;display:grid;grid-template-columns:repeat(var(--pcount,4),1fr);gap:14px;overflow:hidden;align-items:start;padding:4px}
 .fam-col{display:flex;flex-direction:column;gap:5px}
 .fam-label{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-align:center;padding:4px 6px;border-radius:8px;transition:all .3s}
 
@@ -364,7 +364,9 @@ function onMsg(pid,msg){
     if(oi<0||oi===ai||GS.players[oi].hand.length===0)return;
     const cat=msg.cat;
     if(!SL_TV[cat])return;
-    resolveDuel(ai,oi,cat);
+    const aCard=GS.players[ai].hand.find(c=>c.f===msg.f&&c.n===msg.n);
+    if(!aCard)return;
+    resolveDuel(ai,oi,cat,aCard);
     return;
   }
 }
@@ -374,7 +376,6 @@ function startGame(){
   const pp=Math.floor(d.length/GS.players.length);
   GS.players.forEach(p=>{p.hand=d.splice(0,pp);p.wins=0});
   GS.cur=0;GS.started=true;
-  GS.curCard=rndCard(GS.players[0].hand);
   addLog('⚔️ '+(isEs()?'¡Partida iniciada! Modo: Duelo de Categoría. Empieza ':'Spiel gestartet! Modus: Kategorie-Duell! ')+GS.players[0].name+(isEs()?'.':' beginnt.'),'s');
   $('scr-lobby').classList.add('hide');
   bcast();renderBoard();
@@ -383,9 +384,8 @@ function startGame(){
 const DUEL_REVEAL_MS=2400, DUEL_COMPARE_MS=2200, DUEL_RESULT_MS=2200;
 const DUEL_TOTAL_MS=DUEL_REVEAL_MS+DUEL_COMPARE_MS+DUEL_RESULT_MS;
 
-function resolveDuel(ai,oi,cat){
+function resolveDuel(ai,oi,cat,aCard){
   const aP=GS.players[ai],oP=GS.players[oi];
-  const aCard=GS.curCard;
   const oCard=rndCard(oP.hand);
   const aVal=aCard[cat]||0, oVal=oCard[cat]||0;
   const aWins=aVal>=oVal;
@@ -427,12 +427,10 @@ function resolveDuel(ai,oi,cat){
 }
 
 function nextTurn(idx){
-  // Falls Gewinner keine Karten mehr hat (kann nicht passieren da er gerade gewonnen hat) - Sicherheit
   if(GS.players[idx].hand.length===0){
     idx=GS.players.findIndex(p=>p.hand.length>0);
   }
   GS.cur=idx;
-  GS.curCard=rndCard(GS.players[idx].hand);
 }
 
 function gameOver(){
@@ -467,7 +465,7 @@ function bcast(extra={}){
       t:'state',
       players:GS.players.map(q=>({id:q.id,name:q.name,hc:q.hand.length})),
       curId:GS.players[GS.cur]?.id,
-      myCard:isActive?GS.curCard:null,
+      myHand:isActive?p.hand:[],
       opponents:isActive?opponents:[],
       ...extra
     };
@@ -536,34 +534,27 @@ function renderPlayers(){
 
 function renderTable(){
   const table=$('card-table');
-  const ownerMap={};
-  GS.players.forEach((p,i)=>p.hand.forEach(c=>{ownerMap[c.f+c.n]={name:p.name,color:PC[i%4],idx:i}}));
+  table.style.setProperty('--pcount',GS.players.length);
   table.innerHTML='';
-  Object.keys(FAM).forEach(fk=>{
-    const fd=FAM[fk];
+  GS.players.forEach((p,i)=>{
+    const pc=PC[i%4];
     const col=document.createElement('div');
     col.className='fam-col';
     const lbl=document.createElement('div');
     lbl.className='fam-label';
-    lbl.style.background=fd.bg;lbl.style.color=fd.c;
-    lbl.textContent=fd.de;
+    lbl.style.background=`color-mix(in srgb,${pc} 22%,var(--bg2))`;
+    lbl.style.color=pc;
+    lbl.textContent=p.name;
     col.appendChild(lbl);
-    [1,2,3,4].forEach(n=>{
-      const card=CARDS.find(c=>c.f===fk&&c.n===n);
-      if(!card)return;
-      const key=fk+n;
-      const owner=ownerMap[key];
+    const sorted=[...p.hand].sort((a,b)=>a.f===b.f?a.n-b.n:a.f.localeCompare(b.f));
+    sorted.forEach(card=>{
+      const fd=FAM[card.f];
       const div=document.createElement('div');
-      div.className='mc'+(owner?' owned':'');
+      div.className='mc owned';
       div.style.setProperty('--fc',fd.c);
-      const bars=Object.keys(SLbl).map(k=>{
-        const pct=Math.round((card[k]/SM[k])*100);
-        return `<div class="mc-bar"><div class="mc-bar-bg"><div class="mc-bar-f" style="width:${pct}%;background:${SC[k]}"></div></div></div>`;
-      }).join('');
-      div.innerHTML=`<div class="mc-id">${fk}${n}</div>
+      div.innerHTML=`<div class="mc-id">${card.f}${card.n}</div>
         <div class="mc-nm">${card.nm}</div>
-        ${owner?`<div class="mc-owner" style="background:color-mix(in srgb,${owner.color} 20%,transparent);color:${owner.color}">${owner.name}</div>`:''}
-        <div class="mc-bars">${bars}</div>`;
+        <div class="mc-owner" style="background:${fd.bg};color:${fd.c}">${fd.de}</div>`;
       col.appendChild(div);
     });
     table.appendChild(col);
